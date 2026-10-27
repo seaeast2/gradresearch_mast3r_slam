@@ -1,12 +1,12 @@
 # E0_MASt3R-SLAM 환경 준비 기록
 
-작성일: 2026-10-27. 상태: 축소 smoke test 통과, 원본 512 baseline은 GPU 메모리 부족으로 미완료.
+작성일: 2026-10-27. 상태: 8 GB용 환경 준비 완료. 512 이미지·축소 keyframe buffer 설정으로 실행을 확인했으며 원본 설정과의 수치 parity는 미검증.
 
 - 연구 저장소 HEAD `b9fea290e2092dd4826a3914dd8aea90c93501b5`; upstream `thirdparty/MASt3R-SLAM` HEAD `e6f4e3d474fad0e11f561482012be864ba8c3f17`.
 - upstream submodule: Eigen `bddaa99e151244402c6e804e01b970288650da6b`, pyimgui `c79137d6c47040e6ce226f8109868a3018d5354b`, imgui-cpp `35b1148efb839381b84de9290d9caf0b66ad7d03`. 별도 lietorch `e7df86554156b36846008d8ddbcc4d8521a16554`, Eigen `824272cde8ca2541e8b67b0887f5ded92b128d1f`.
 - Ubuntu 26.04.1, RTX 5060 8151 MiB, NVIDIA driver 595.99.02, 호스트 nvcc 13.4.92. 샌드박스 밖에서 GPU 확인. 프로젝트 내 micromamba 환경 `thirdparty/mast3r-env`에 Python 3.11, CUDA toolkit 12.8 및 PyTorch 2.7.1+cu128 설치. 실제 GPU tensor 연산 합계 1240 확인.
 - 공식 예제의 PyTorch 2.5.1과 달리 Blackwell 지원을 위해 2.7.1+cu128 사용. 최신 PyTorch 빌드 호환과 sm_120을 위한 upstream 수정은 [패치](../../../configs/E0_environment_preparation/mast3r_slam_pytorch27_compat.patch)에 기록. 이 변경을 포함한 환경으로 원본 수치 parity는 아직 검증하지 않았다.
-- 원본 MASt3R 모델 다운로드가 느려 제3자 미러 `https://huggingface.co/vslamlab/mast3rslam_weights/resolve/5eec445/MASt3R_ViTLarge_BaseDecoder_512_catmlpdpt_metric.pth` 사용. SHA-256 `e28f91b488554653e2b46ddae9c78c1143e0bcb2e27d3e26cdb0b717f1568eb2`로 미러 게시값과 일치하나 공식 원본 해시와 비교하지 못했다. 나머지 retrieval 두 파일은 이전 연구 저장소의 파일을 복사했다. 파일 출처 확인 및 라이선스 검토가 필요하다. MASt3R-SLAM 및 MASt3R/DUSt3R에는 CC BY-NC-SA 4.0 조건이 명시돼 있고, 의존 패키지와 체크포인트별 조건은 별도 확인한다.
+- 원본 MASt3R 모델 다운로드가 느려 제3자 미러 `https://huggingface.co/vslamlab/mast3rslam_weights/resolve/5eec445/MASt3R_ViTLarge_BaseDecoder_512_catmlpdpt_metric.pth` 사용. SHA-256 `e28f91b488554653e2b46ddae9c78c1143e0bcb2e27d3e26cdb0b717f1568eb2`로 미러 게시값과 일치했으며, 이후 공식 원본 다운로드와도 일치함을 확인했다. 나머지 retrieval 두 파일은 이전 연구 저장소의 파일을 복사했다. 파일 출처 확인 및 라이선스 검토가 필요하다. MASt3R-SLAM 및 MASt3R/DUSt3R에는 CC BY-NC-SA 4.0 조건이 명시돼 있고, 의존 패키지와 체크포인트별 조건은 별도 확인한다.
 - TUM room 공식 데이터를 내려받았다. HKairport01 기존 원본 ZIP SHA-256 `ee059b678a4686b7578e4fa390927e6eac82a8e3d0e8836855b09bd4bd312336`은 기존 연구 manifest와 일치한다. 기존 `configs/e4e_input_split.json`의 mapping 240장만 추출. 5 Hz 후보 중 `grid_index mod 5 = 4` 60장은 held-out. 첫/마지막 timestamp는 1671606500.1999009 / 1671606559.799969이며 이미지 크기 2448×2048. 매핑 및 JPG/PNG hash는 `data/HKairport01/mapping_frames.csv`에 기록.
 - 공식 RGBFiles 로더는 PNG만 읽고 프레임 순서/30의 가상 timestamp를 생성한다. PNG는 JPEG를 Pillow로 디코딩해 무손실로 저장했으며 원본 timestamp는 CSV를 사용해야 한다. 해당 로더는 시간 간격을 보존하지 않으므로 타임라인 분석 전에 adapter 또는 매핑이 필요하다. 원본 calibration/distortion은 미검증이며 smoke test는 uncalibrated로 계획한다.
 - 공식 TUM 자료: `thirdparty/MASt3R-SLAM/datasets/tum/rgbd_dataset_freiburg1_room/`; HK 입력: `data/HKairport01/mapping/`, 최초 10장 `data/HKairport01/smoke/`. 큰 파일 및 실행 로그는 Git에서 제외된다.
@@ -18,6 +18,18 @@
 - TUM room의 앞 10장, `config/calib.yaml`의 `subsample=2`로 실제 5장 처리: 224, `--no-viz`, 종료 0, 11.82초. PLY 42,993 finite points, trajectory 1 keyframe. `results/E0_environment_preparation/2026-10-27/logs/prep_tum_224_smoke10.log` 및 `results/E0_environment_preparation/2026-10-27/outputs/prep_tum_224_smoke10/`.
 - HKairport01 mapping 앞 10장: 224, `config/base.yaml`, 보정 미사용, `--no-viz`, 종료 0, 14.14초. PLY 48,801 finite points, trajectory 1 keyframe. `results/E0_environment_preparation/2026-10-27/logs/prep_hk_224_smoke10.log` 및 `results/E0_environment_preparation/2026-10-27/outputs/prep_hk_224_smoke10/`.
 - 두 실행 모두 keyframe이 하나뿐이라 다중 keyframe, loop closure 및 전체 backend 최적화를 검증하지 못했다. GPU 최대 사용량은 별도 측정하지 않았다. `pip check` 통과. 출력은 사용 가능성 smoke test이며 단차 재현이나 기하 정확도 평가가 아니다.
-- PyTorch 2.7의 체크포인트 로딩 기본값 변경 때문에 두 실행에서 `TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD=1` 사용. pickle 로딩은 코드 실행 가능성이 있으므로 파일 출처를 신뢰해야 한다. 모델은 공식 원본 파일과 해시 대조되지 않은 제3자 미러 사본이다. 512 원본 baseline 실행 시 공식 체크포인트와 대조하고, VRAM 부족을 해결한 뒤 parity와 실행을 다시 검증한다.
+- PyTorch 2.7의 체크포인트 로딩 기본값 변경 때문에 두 실행에서 `TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD=1` 사용. pickle 로딩은 코드 실행 가능성이 있으므로 파일 출처를 신뢰해야 한다. 모델은 이후 공식 원본과 해시 대조를 통과했다. 수정된 실행 환경과 원본의 수치 parity는 E1에서 별도로 검증한다.
 
 실행 당시 upstream `logs/`에 생성된 결과는 실험 격리를 위해 위 `results/E0_environment_preparation/2026-10-27/outputs/`로 이동했다. 명령 및 로그에 표시된 실행 당시 경로는 이력으로 보존한다.
+
+## 8 GB 설정 검증 (추가 실행)
+
+- 이전 연구의 저메모리 방식을 참고해 [저메모리 패치](../../../configs/E0_environment_preparation/mast3r_slam_low_vram.patch)를 적용했다. 이미지 크기는 공식 기본값 512를 유지하며 keyframe 버퍼는 512→32로 제한한다. `single_thread: true`, 초기 backend 완료 대기 및 CUDA 캐시 반환을 사용한다. 버퍼가 가득 차면 명시적 오류로 중단한다. 이러한 설정은 upstream 기본 실행과 동일하다고 가정하지 않는다.
+- TUM room 앞 10개 이미지 중 config subsample=2로 5개 처리: 종료 0, 1 KF, finite PLY 164,051점. 추가로 10프레임 간격 추출 60장 중 30장을 보정 모드로 처리: 종료 0, 3 KF, finite PLY 537,805점, GPU 사용량 1초 간격 표본 최대 5,008 MiB. `Skipped frame 5`, `Cholesky failed 7`이 기록돼 추적 품질의 성공을 의미하지 않는다.
+- HKairport01 앞 80장: 종료 0, 1 KF, finite PLY 212,895점, 표본 최대 4,672 MiB. 기존 mapping 240장 전체: 종료 0, 19 KF, finite PLY 3,331,363점, 재방문 검색 로그 확인, 107.85초, 표본 최대 6,260/8,151 MiB. GPU 수치는 시스템 전체 1초 표본 최대이므로 순간 피크를 보장하지 않는다. accepted graph edge와 실제 최적화 수치는 별도 계측하지 않았다.
+- 로그·GPU 표본·출력은 `results/E0_environment_preparation/2026-10-27/low_vram/`에 보존한다. 240장 실행은 환경 검증이며 E1 단차 진단 및 정량 평가는 수행하지 않았다. RGBFiles timestamp는 여전히 가상 30 fps이므로 실제 시간 분석에는 `data/HKairport01/mapping_frames.csv`가 필요하다.
+- 공식 NAVER URL에서 전체 체크포인트를 다운로드해 기존 미러 파일과 SHA-256 `e28f91b488554653e2b46ddae9c78c1143e0bcb2e27d3e26cdb0b717f1568eb2` 일치를 확인했다. 동일 파일 중복본은 삭제했다. retrieval 체크포인트는 기존 연구에서 복사한 파일을 사용했다.
+- 재실행은 저장소 루트에서 `scripts/E0_environment_preparation/run_8gb.sh data/HKairport01/mapping base <고유-run-id>`를 사용한다. 이 스크립트는 pickle 로딩 호환 변수 `TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD=1`을 사용한다. 출력은 별도 run 폴더에 저장하며 동일 이름 덮어쓰기를 거부한다.
+- 제약: 32개보다 많은 KF가 필요한 장면은 실패할 수 있고 8 GB 전체 시퀀스에서의 성공을 보장하지 않는다. 512 이미지에서 원본 다중 프로세스 설정과 변경된 PyTorch/커널의 수치 parity, trajectory 정확도 및 활주로 단차는 미검증이다. 후속 E1에서 원본/계측 parity와 시간 매핑을 확인해야 한다.
+
+- 재실행 스크립트 검사: `run_8gb.sh data/HKairport01/smoke base E0_runner_check_512` 종료 0. 실행 로그 및 출력은 `results/E0_environment_preparation/2026-10-27/E0_runner_check_512/`에 보존했다.

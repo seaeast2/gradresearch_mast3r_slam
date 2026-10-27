@@ -1,0 +1,2 @@
+inherit: "config/base.yaml"
+single_thread: true

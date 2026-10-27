@@ -1,0 +1,12 @@
+{
+  "experiment_id": "E0a_keyframe_spacing",
+  "status": "exploratory feasibility; not E6 causal test",
+  "input": "data/HKairport01/mapping",
+  "frame_times": "data/HKairport01/mapping_frames.csv",
+  "frame_time_field": "rgb_timestamp",
+  "control_minimum_seconds": 0.0,
+  "candidate_minimum_seconds": 2.0,
+  "keyframe_policy": "Defer normal tracking keyframe candidates until 2 seconds after last keyframe by recorded camera timestamp; retain all input frames. Relocalization may create keyframes outside this interval.",
+  "fixed_conditions": "512 input, same 240 mapping frames, base low-vram config, keyframe buffer 32, single_thread, same model weights",
+  "comparison": "Compare keyframe timestamps and count, deferred proposals, logged tracking/relocalization, output validity and sampled GPU memory; no geometry efficacy claim without same-surface evaluation."
+}

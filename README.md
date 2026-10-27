@@ -7,13 +7,16 @@
 - [E0 실행 결과와 미해결 사항](docs/experiments/E0_environment_preparation/E0_repo_audit.md)
 - [E0 환경 manifest](configs/E0_environment_preparation/environment_manifest.json)
 
-현재 E0의 224 입력 smoke test는 통과했다. 512 입력은 GPU 메모리 부족으로 실패했으며, E1 baseline 및 이후 실험은 아직 수행하지 않았다.
+현재 E0의 8 GB용 환경 준비는 완료됐다. 512 입력·KF buffer 32 설정에서 HKairport01 240프레임을 실행했으며, E1의 단차 진단과 이후 실험은 아직 수행하지 않았다. 원본 설정과의 수치 parity 및 실제 timestamp 적용은 별도 확인이 필요하다.
+
+현재 HKairport01 탐색 실행은 실제 촬영 시각 기준 **2초 최소 keyframe 간격**을 사용한다. 동일 입력 비교에서 19개에서 6개로 줄었으며, 이 결과는 기하 개선의 증거가 아니다. 상세 조건과 재실행 방법은 [E0a 결과](docs/experiments/E0a_keyframe_spacing/E0a_keyframe_spacing_results.md)를 참조한다. 기존 정책은 E1 대조군으로 보존한다.
 
 ## 실험 코드와 폴더
 
 | 코드 | 단계 | 결과 폴더명 |
 |---|---|---|
 | E0 | 실험 환경 준비 | `E0_environment_preparation` |
+| E0a | keyframe 간격 탐색 테스트 | `E0a_keyframe_spacing` |
 | E1 | R0 원본 재현 | `E1_baseline_reproduction` |
 | E2 | R1 raw pointmap | `E2_raw_pointmap` |
 | E3 | R2 tracking·fusion | `E3_tracking_fusion` |

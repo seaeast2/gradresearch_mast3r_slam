@@ -1,0 +1,2 @@
+inherit: "config/calib.yaml"
+single_thread: true

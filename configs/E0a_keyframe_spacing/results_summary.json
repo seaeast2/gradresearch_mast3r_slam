@@ -1,0 +1,58 @@
+{
+  "experiment": "E0a_keyframe_spacing",
+  "date": "2026-10-27",
+  "upstream_commit": "e6f4e3d474fad0e11f561482012be864ba8c3f17",
+  "model_sha256": "e28f91b488554653e2b46ddae9c78c1143e0bcb2e27d3e26cdb0b717f1568eb2",
+  "input_count": 240,
+  "hashes": {
+    "configs/E0a_keyframe_spacing/protocol.json": "07ba830a2e76887435c42a6cd854417c74be98bce9eee2c3ae7c33b239f3ee3d",
+    "configs/E0a_keyframe_spacing/keyframe_spacing.patch": "0e899f5973689e13cc27ebe46e5950f68e8c179d986af3b278377c8f42a378cc",
+    "configs/E0_environment_preparation/mast3r_slam_low_vram.patch": "d35bfcecca564ab8a21e3beb787ab5017ead86a400162ff11ca589c45ae82bfc",
+    "configs/E0_environment_preparation/mast3r_slam_pytorch27_compat.patch": "f346abe856bf11dbf5f7bac3668c58d58115f1923662c9ca0219553c008eae2a",
+    "configs/E0_environment_preparation/low_vram_base.yaml": "48dd2a1a407f421a485b83a0b74bb329b138f0173e0be21c453e081736a4d1f9",
+    "scripts/E0a_keyframe_spacing/run_comparison.sh": "dded1b61709bc68578ee732e5cbd640b8f28e1c15bbdc63553dd0105cc8e5bb5",
+    "data/HKairport01/mapping_frames.csv": "f8fce8e33b7d6aaa3bb6c0e340924b318016224aba4672d7786d874f545d2fb7"
+  },
+  "results": {
+    "control": {
+      "exit_code": 0,
+      "keyframes": 19,
+      "interval_min_s": 0.19991397857666016,
+      "interval_median_s": 0.20011508464813232,
+      "interval_max_s": 33.19998621940613,
+      "intervals_below_2s": 15,
+      "deferred_proposals": 0,
+      "skipped_frame_logs": 0,
+      "cholesky_failures": 0,
+      "relocalization_attempts": 0,
+      "retrieval_events": 17,
+      "ply_vertices": 3331363,
+      "ply_xyz_all_finite": true,
+      "sampled_peak_gpu_mib": 6244,
+      "elapsed": "1:47.59",
+      "trajectory": "results/E0a_keyframe_spacing/2026-10-27/control/output/mapping.txt",
+      "keyframe_times": "results/E0a_keyframe_spacing/2026-10-27/control/keyframe_times.csv",
+      "log": "results/E0a_keyframe_spacing/2026-10-27/control/run.log"
+    },
+    "candidate_2s": {
+      "exit_code": 0,
+      "keyframes": 6,
+      "interval_min_s": 2.000171184539795,
+      "interval_median_s": 2.399925947189331,
+      "interval_max_s": 33.19998621940613,
+      "intervals_below_2s": 0,
+      "deferred_proposals": 23,
+      "skipped_frame_logs": 0,
+      "cholesky_failures": 0,
+      "relocalization_attempts": 0,
+      "retrieval_events": 4,
+      "ply_vertices": 1192768,
+      "ply_xyz_all_finite": true,
+      "sampled_peak_gpu_mib": 5678,
+      "elapsed": "1:36.64",
+      "trajectory": "results/E0a_keyframe_spacing/2026-10-27/candidate_2s/output/mapping.txt",
+      "keyframe_times": "results/E0a_keyframe_spacing/2026-10-27/candidate_2s/keyframe_times.csv",
+      "log": "results/E0a_keyframe_spacing/2026-10-27/candidate_2s/run.log"
+    }
+  }
+}

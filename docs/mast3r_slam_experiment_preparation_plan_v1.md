@@ -3,7 +3,7 @@
 **버전:** v1.0  
 **작성일:** 2026-10-27  
 **실험 코드:** E0 — 실험 환경 준비  
-**상태:** 준비 진행 중; 224 smoke test 통과, 원본 512 baseline은 GPU 메모리 부족으로 미완료. 실행 결과는 [E0 결과 기록](experiments/E0_environment_preparation/E0_repo_audit.md)을 따른다.  
+**상태:** 8 GB 설정 준비 완료; 512 입력, KF buffer 32 및 단일 스레드 설정을 검증했다. 원본 설정과의 수치 parity는 미검증. 실행 결과는 [E0 결과 기록](experiments/E0_environment_preparation/E0_repo_audit.md)을 따른다.
 **연결 문서:** [활주로 기하 단차 원인분석 실험계획서](mast3r_slam_runway_geometry_diagnostic_plan_v1.md)
 
 ## 1. 목표와 완료 조건
@@ -30,6 +30,8 @@
 **선행 게이트:** GPU 접근이 가능한 샌드박스 밖의 실제 실행 환경에서 `nvidia-smi`, `nvcc --version`, 사용 가능한 Conda 및 디스크 공간을 확인한 뒤 설치한다. 샌드박스 안의 접근 실패와 실제 실행 환경의 실패를 구분해 기록한다. 실제 실행 환경에서도 GPU를 확인할 수 없으면 접근 설정을 점검하고 CUDA 빌드·실행을 성공으로 표시하지 않는다. 공식 저장소는 Ubuntu를 주로 테스트했으며 WSL에는 별도 `windows` 브랜치를 안내한다. OS와 브랜치를 기록하고 WSL이면 해당 브랜치 지침을 재확인한다. [공식 README](https://github.com/rmurai0610/MASt3R-SLAM#installation)
 
 ## 3. 단계별 실행 계획
+
+아래 공식 설치·실행 명령은 최초 계획의 기준이다. 실제 8 GB 환경은 512 이미지 입력과 KF buffer 32, `single_thread: true`, 저메모리 패치를 사용한다. 실행은 `scripts/E0_environment_preparation/run_8gb.sh`와 E0 결과 기록을 따르며, 공식 기본 buffer 512는 OOM으로 실패했다.
 
 ### E0-P0. 호스트 및 저장소 감사
 
@@ -131,12 +133,12 @@ python main.py --dataset /absolute/path/to/hkairport01_smoke_frames --config con
 
 ## 5. 실행 체크리스트
 
-- [ ] E0-P0 호스트/GPU 및 저장소 감사 완료
-- [ ] E0-P1 upstream과 submodule 확보, commit 및 라이선스 기록
-- [ ] E0-P2 독립 환경 설치, CUDA 빌드 및 GPU 연산 검증
-- [ ] E0-P3 세 체크포인트 확보 및 hash 기록
-- [ ] E0-P4 공식 TUM 예제 정상 실행 및 출력 확인
-- [ ] E0-P5 HKairport01 입력·시간 매핑 QA 및 짧은 smoke test
-- [ ] E0-P6 manifest, 로그, 설정과 미해결 사항 정리 후 R0 인계
+- [x] E0-P0 호스트/GPU 및 저장소 감사 완료
+- [ ] E0-P1 upstream과 submodule 확보 및 commit 기록 완료; 의존 패키지·체크포인트별 라이선스 검토 보완 필요
+- [x] E0-P2 독립 환경 설치, CUDA 빌드 및 GPU 연산 검증
+- [x] E0-P3 세 체크포인트 확보 및 hash 기록
+- [x] E0-P4 공식 TUM 예제 정상 실행 및 출력 확인
+- [x] E0-P5 HKairport01 입력·시간 매핑 QA 및 짧은 smoke test
+- [x] E0-P6 manifest, 로그, 설정과 미해결 사항 정리 후 R0 인계
 
 본 문서의 명령과 경로는 실행 계획이며, 설치·다운로드·실험의 완료를 의미하지 않는다.
