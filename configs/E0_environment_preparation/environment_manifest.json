@@ -1,0 +1,79 @@
+{
+  "status": "partial_smoke_passed_baseline_blocked_by_gpu_memory",
+  "date": "2026-10-27",
+  "research_commit": "b9fea290e2092dd4826a3914dd8aea90c93501b5",
+  "upstream_commit": "e6f4e3d474fad0e11f561482012be864ba8c3f17",
+  "lietorch_commit": "e7df86554156b36846008d8ddbcc4d8521a16554",
+  "os": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+  "gpu": "NVIDIA GeForce RTX 5060",
+  "vram_mib": 8151,
+  "driver": "595.99.02",
+  "host_nvcc": "13.4.92",
+  "environment": "thirdparty/mast3r-env",
+  "python": "3.11.18",
+  "torch": "2.7.1+cu128",
+  "toolkit": "12.8",
+  "gpu_tensor_test": "passed: sum(arange(16)**2)=1240",
+  "checkpoints": {
+    "MASt3R_ViTLarge_BaseDecoder_512_catmlpdpt_metric.pth": {
+      "size_bytes": 2754910614,
+      "sha256": "e28f91b488554653e2b46ddae9c78c1143e0bcb2e27d3e26cdb0b717f1568eb2"
+    },
+    "MASt3R_ViTLarge_BaseDecoder_512_catmlpdpt_metric_retrieval_trainingfree.pth": {
+      "size_bytes": 8399111,
+      "sha256": "000a324f06f9369ab3e32d03dd4b8a838d48e98e3f3bf9d7dd034dce1bfd4c50"
+    },
+    "MASt3R_ViTLarge_BaseDecoder_512_catmlpdpt_metric_retrieval_codebook.pkl": {
+      "size_bytes": 268435691,
+      "sha256": "700af9e31ad0ca6159955dc80b4fd6e14234780b52f5c91884f6553991933c1a"
+    }
+  },
+  "model_source": "https://huggingface.co/vslamlab/mast3rslam_weights/resolve/5eec445/MASt3R_ViTLarge_BaseDecoder_512_catmlpdpt_metric.pth",
+  "model_source_limitation": "Third-party mirror hash matched; official file hash not verified",
+  "retrieval_source": "copied from previous local research repository",
+  "input_archive_sha256": "ee059b678a4686b7578e4fa390927e6eac82a8e3d0e8836855b09bd4bd312336",
+  "mapping_csv": "data/HKairport01/mapping_frames.csv",
+  "mapping_csv_sha256": "f8fce8e33b7d6aaa3bb6c0e340924b318016224aba4672d7786d874f545d2fb7",
+  "source_patch": "configs/E0_environment_preparation/mast3r_slam_pytorch27_compat.patch",
+  "source_patch_sha256": "f346abe856bf11dbf5f7bac3668c58d58115f1923662c9ca0219553c008eae2a",
+  "package_lists": [
+    "results/E0_environment_preparation/2026-10-27/logs/prep_pip_freeze.txt",
+    "results/E0_environment_preparation/2026-10-27/logs/prep_conda_explicit.txt"
+  ],
+  "smoke_tests": {
+    "tum_official_512": {
+      "exit_code": 1,
+      "result": "CUDA OOM during initial inference",
+      "log": "results/E0_environment_preparation/2026-10-27/logs/prep_tum.log"
+    },
+    "tum_224": {
+      "exit_code": 0,
+      "input_files": 10,
+      "processed_frames": 5,
+      "reason": "calib.yaml subsample=2",
+      "trajectory_keyframes": 1,
+      "ply_vertices": 42993,
+      "log": "results/E0_environment_preparation/2026-10-27/logs/prep_tum_224_smoke10.log",
+      "output": "results/E0_environment_preparation/2026-10-27/outputs/prep_tum_224_smoke10"
+    },
+    "hk_224": {
+      "exit_code": 0,
+      "processed_frames": 10,
+      "trajectory_keyframes": 1,
+      "ply_vertices": 48801,
+      "log": "results/E0_environment_preparation/2026-10-27/logs/prep_hk_224_smoke10.log",
+      "output": "results/E0_environment_preparation/2026-10-27/outputs/prep_hk_224_smoke10"
+    }
+  },
+  "smoke_env": {
+    "MAST3R_SLAM_IMAGE_SIZE": "224",
+    "TORCH_FORCE_NO_WEIGHTS_ONLY_LOAD": "1"
+  },
+  "limits": [
+    "512 baseline failed OOM",
+    "224 smoke tests use one keyframe each and do not validate loop closure or full backend optimization",
+    "model sourced from third-party mirror, official checksum comparison pending",
+    "peak GPU memory not recorded",
+    "RGBFiles timestamps synthetic 30 fps; use mapping CSV"
+  ]
+}

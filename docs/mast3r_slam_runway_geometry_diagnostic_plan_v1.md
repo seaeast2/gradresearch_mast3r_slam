@@ -6,6 +6,8 @@
 **기준 연구:** MASt3R-SLAM (Murai et al., CVPR 2025)  
 **상태:** *계획서 / 미실행*. 앞선 E0–E4f, A0–A2-O-M의 결과를 새로운 실험 성공으로 소급하지 않음.
 
+**실행 환경:** 사용자에 따르면 NVIDIA 드라이버와 CUDA는 샌드박스 밖에서 정상적으로 사용할 수 있다. 샌드박스 안에서의 `nvidia-smi` 드라이버 통신 실패는 호스트 장애로 단정하지 않는다. 실험은 GPU 접근이 가능한 실제 실행 환경에서 수행하고, GPU 모델·VRAM·드라이버·CUDA 및 PyTorch 버전과 실제 연산을 준비 단계에서 확인해 기록한다. 세부 절차는 [실험 준비 단계 계획서](mast3r_slam_experiment_preparation_plan_v1.md)를 따른다.
+
 > **핵심 목적:** 단안 드론 영상의 실제로 연속적인 활주로 표면이 3D 지도에서 계단형 높이 불연속으로 나타나는 현상이 **(1) 이미지 쌍의 원본 Pointmap**, **(2) Tracking과 Canonical Pointmap Fusion**, **(3) Keyframe별 Sim(3) 배치·Backend 최적화**, **(4) 지도 Export/표현** 중 어느 단계에서 처음 발생하고 증폭되는지 확인한다. 원인 판정 전에는 새로운 Depth/Plane 보정 알고리즘을 구현하지 않는다.
 
 ---
@@ -116,7 +118,9 @@ Export / downstream GS (진단용 선택)
 
 ## 3. 실험 단계: 원인 위치 찾기 (필수, R0–R4)
 
-### R0 — 원본 재현과 provenance 확인
+**실험 코드 규칙:** E0는 환경 준비, E1–E5는 각각 기존 R0–R4, E6은 선택한 최소 통제실험, E7은 독립 검증, E8은 논문 Go/No-Go 판단이다. 기존 R/T/V 표기는 연구 단계와 대조 종류를 식별하는 보조 코드로 유지한다. E0의 세부 준비 작업은 E0-P0–E0-P6으로 구분한다. E6의 후보는 E6-T-CAL, E6-T-KF, E6-T-FUS, E6-T-POSE, E6-T-PAR, E6-T-EXP로 구분하며 기존 원칙대로 하나만 선택한다. 각 단계의 결과 Markdown은 `E<번호>_설명.md`로 명명하고 반복 실행은 run ID로 구분한다. 예전 연구의 E0–E4f는 별도 저장소의 과거 코드이며 이번 연구의 코드와 동일한 실험이 아니다.
+
+### E1 (R0) — 원본 재현과 provenance 확인
 
 **목적:** MASt3R-SLAM 단독 baseline이 관찰된 단차를 재현하는지 확정. 기존 Splatt3R-SLAM PLY만의 단차라면 별도 후단 문제이다.
 
@@ -124,7 +128,7 @@ Export / downstream GS (진단용 선택)
 
 **기본 결과:** `R0_map_by_keyframe.ply`, `R0_tracking_timeline.csv`, `R0_run_manifest.json`, `R0_image_map_contactsheet.png`. *이 단계에서 단차가 재현되지 않으면 downstream-only 진단으로 전환하고 R1–R4의 주장을 중단한다.*
 
-### R1 — Raw Pointmap의 국소 평면성과 장면 간 차이
+### E2 (R1) — Raw Pointmap의 국소 평면성과 장면 간 차이
 
 **목적:** MASt3R pair output에서 이미 구조가 휘어 있는지 판별.
 
@@ -132,7 +136,7 @@ Export / downstream GS (진단용 선택)
 
 **판정:** Raw pair 내부에서도 패치 왜곡과 경계가 보이면 **H-L 지지**. 개별 Raw 패치가 평탄해도 물리적 높이가 옳다는 뜻은 아니다. Raw geometry를 동일 world로 옮기기 전에 평면간 offset을 직접 비교하지 않는다.
 
-### R2 — Tracking과 canonical fusion 전후 변화
+### E3 (R2) — Tracking과 canonical fusion 전후 변화
 
 **목적:** Fusion으로 새 단차가 생기는지 확인.
 
@@ -140,7 +144,7 @@ Export / downstream GS (진단용 선택)
 
 **판정:** Raw는 평탄하지만 fused patch에서만 휨/분절이 커지면 **H-F 지지**. Fusion이 raw noise를 줄이더라도 global KF간 불연속이 남으면 R3을 진행한다. *Fusion 이전/이후로 비교할 때 동일 local frame, 동일 ROI support를 유지*한다.
 
-### R3 — Keyframe world placement / Backend revision
+### E4 (R3) — Keyframe world placement / Backend revision
 
 **목적:** 인접 KF의 local plane이 world 배치에서 분리되는가?
 
@@ -148,7 +152,7 @@ Export / downstream GS (진단용 선택)
 
 **판정:** local/fused patch는 평탄한데 world에서만 인접 패치가 갈라지면 **H-P 지지**. Backend 업데이트 전후 단차가 출현·증폭된다면 **H-B 지지**. camera-reference calibration 불확실할 경우 이 결과는 내부 일관성 진단으로만 보고한다.
 
-### R4 — Tracking gap·keyframe 경계·매칭 퇴화와의 연계
+### E5 (R4) — Tracking gap·keyframe 경계·매칭 퇴화와의 연계
 
 **목적:** `HKairport01`의 2.4초 pose 누락, KF 전환/재초기화가 단차와 연결되는가?
 
@@ -158,16 +162,16 @@ Export / downstream GS (진단용 선택)
 
 ---
 
-## 4. 원인 후보별 최소 통제실험 (R0–R4 후 하나만 선택)
+## 4. E6 — 원인 후보별 최소 통제실험 (R0–R4 후 하나만 선택)
 
 | 코드 | 실험 개입 | 고정 항목 | 무엇을 분리하는가 | 제한 |
 |---|---|---|---|---|
-| T-CAL | Native calibration vs 검증된 calibrated/undistorted input | 같은 프레임·weight·KF policy | 카메라 왜곡/ray 추정 영향 | 미검증 calibration을 GT로 부르지 않음 |
-| T-KF | 짧은 gap 근처 KF selection/edge 유지 정책 소규모 변화 | 입력/weight, 평가 mask | KF 수·경계와 단차의 상관·민감도 | KF가 바뀌면 동일 ID의 직접 비교는 불가; 공통 ROI에 평가 |
-| T-FUS | Fusion update replay: 원래 vs 후보 입력 하나 제외 vs confidence cap | tracking poses frozen, same source frames | fusion 오염·높은 신뢰도 오류 | 인과 효과는 replay 조건에만 해당 |
-| T-POSE | Fused pointmap frozen; pre/post pose replay 및 local pair-fixed world placement | pointmap 그대로, 공통 gauge | pose/scale 배치 영향 | GT pose 대체는 **oracle**로 분리 |
-| T-PAR | 같은 장면에서 사전 정한 충분/불충분 시차 subset 비교 | scene·ROI·평가 지원 | 저시차 퇴화 영향 | subset 변화로 관측량도 변하므로 둘 다 보고 |
-| T-EXP | raw/fused/world pointcloud vs exported PLY 수치 parity | 동일 저장 포인트 ID | export/후단 오류 | 색·좌표 압축/축 전환도 점검 |
+| E6-T-CAL | Native calibration vs 검증된 calibrated/undistorted input | 같은 프레임·weight·KF policy | 카메라 왜곡/ray 추정 영향 | 미검증 calibration을 GT로 부르지 않음 |
+| E6-T-KF | 짧은 gap 근처 KF selection/edge 유지 정책 소규모 변화 | 입력/weight, 평가 mask | KF 수·경계와 단차의 상관·민감도 | KF가 바뀌면 동일 ID의 직접 비교는 불가; 공통 ROI에 평가 |
+| E6-T-FUS | Fusion update replay: 원래 vs 후보 입력 하나 제외 vs confidence cap | tracking poses frozen, same source frames | fusion 오염·높은 신뢰도 오류 | 인과 효과는 replay 조건에만 해당 |
+| E6-T-POSE | Fused pointmap frozen; pre/post pose replay 및 local pair-fixed world placement | pointmap 그대로, 공통 gauge | pose/scale 배치 영향 | GT pose 대체는 **oracle**로 분리 |
+| E6-T-PAR | 같은 장면에서 사전 정한 충분/불충분 시차 subset 비교 | scene·ROI·평가 지원 | 저시차 퇴화 영향 | subset 변화로 관측량도 변하므로 둘 다 보고 |
+| E6-T-EXP | raw/fused/world pointcloud vs exported PLY 수치 parity | 동일 저장 포인트 ID | export/후단 오류 | 색·좌표 압축/축 전환도 점검 |
 
 **조기 중단 원칙:** R0–R4 중 실패 단계가 특정되면 **그 단계의 가장 단순한 대조실험 1개**만 실행한다. 네트워크 재학습, full joint-optimizer, dense mesh 생성, 3DGS refinement는 하지 않는다.
 
@@ -247,53 +251,40 @@ r_{i\to j}=\operatorname{median}_{\mathbf p\in\Omega_{ij}}
 
 ## 7. 실행 순서, 규모 및 최소 산출물
 
-| 순서 | 단계 | 작업 범위 | 필수 출력 |
+| 실험 코드 | 단계 | 작업 범위 | 필수 출력 |
 |---|---|---|---|
-| 0 | 저장소 감사 | 사용자 repo/upstream commit diff, 환경, 기존 실행 재현 가능성 | `repo_audit.md`, `environment_manifest.json` |
-| 1 | R0 | HKairport01 한 구간 baseline, KF 색 분류 PLY, tracking/KF 타임라인 | `R0_*` 및 단차 ROI 지정 |
-| 2 | R1 | 단차 발생 전후 **3–5 KF**의 raw pointmap 비교 | `R1_raw_plane.csv`, figure |
-| 3 | R2 | 같은 KF의 fusion input/before/after/after-freeze | `R2_fusion_events.parquet`, figure |
-| 4 | R3 | pre/post backend Sim(3), overlap seam, scale/pitch | `R3_pairwise_seams.csv`, graph |
-| 5 | R4 | tracking gap 및 texture/parallax 연관성 | `R4_timeline.csv`, paired plots |
-| 6 | T-* | R0–R4 결과에서 우선순위가 높은 한 원인만 최소 개입 | frozen replay + negative controls |
-| 7 | V0 | 새 UAV 영상/미사용 구간에서 원인 패턴 재현성 | `V0_results.md`, 실패 포함 |
-| 8 | 논문 Go/No-Go | 원인과 설명력을 충분히 입증했는지 검토 | `route_decision.md` |
+| E0 | 실험 환경 준비 | 저장소 감사, 설치, 데이터 QA 및 smoke test | `docs/experiments/E0_environment_preparation/E0_repo_audit.md`, `configs/E0_environment_preparation/environment_manifest.json` |
+| E1 | R0 | HKairport01 한 구간 baseline, KF 색 분류 PLY, tracking/KF 타임라인 | `R0_*` 및 단차 ROI 지정 |
+| E2 | R1 | 단차 발생 전후 **3–5 KF**의 raw pointmap 비교 | `R1_raw_plane.csv`, figure |
+| E3 | R2 | 같은 KF의 fusion input/before/after/after-freeze | `R2_fusion_events.parquet`, figure |
+| E4 | R3 | pre/post backend Sim(3), overlap seam, scale/pitch | `R3_pairwise_seams.csv`, graph |
+| E5 | R4 | tracking gap 및 texture/parallax 연관성 | `R4_timeline.csv`, paired plots |
+| E6 | T-* | R0–R4 결과에서 우선순위가 높은 한 원인만 최소 개입 | frozen replay + negative controls |
+| E7 | V0 | 새 UAV 영상/미사용 구간에서 원인 패턴 재현성 | `E7_V0_results.md`, 실패 포함 |
+| E8 | 논문 Go/No-Go | 원인과 설명력을 충분히 입증했는지 검토 | `E8_route_decision.md` |
 
-**구현 우선순위:** 첫 주기의 완료 조건은 `R0 + R1 + R3의 최소 subset`이다. 이 정도 자료로 Local-vs-Placement를 일차 판별할 수 없다면 Fusion이나 backend 전체를 대규모 계측하기 전에 support/gauge를 먼저 수정한다. GPU 8GB를 고려하여 처음에는 원본 체크포인트·저해상도 로그/ROI subset을 사용하고 전체 지도 export를 반복 저장하지 않는다.
+**구현 우선순위:** 첫 주기의 완료 조건은 `R0 + R1 + R3의 최소 subset`이다. 이 정도 자료로 Local-vs-Placement를 일차 판별할 수 없다면 Fusion이나 backend 전체를 대규모 계측하기 전에 support/gauge를 먼저 수정한다. GPU 8GB는 잠정 예산 가정이므로 실제 VRAM과 사용량을 확인한다. 처음에는 원본 체크포인트·저해상도 로그/ROI subset을 사용하고 전체 지도 export를 반복 저장하지 않는다.
 
 ### 보고서 필수 구조
 
 각 실험 보고서에는 `질문 → 사전 등록 가설 → 실행 hash/command → 데이터·좌표계·지원률 → 숫자·시각화 → negative controls → 해석 가능 범위 → 한계 → 다음 단일 결정` 순서를 유지한다. 계획·실행·사후 해석 파일을 분리한다.
 
-### 제안 저장소 구조 (현재 실제 트리라고 주장하지 않음)
+### 저장소 구조와 실험 격리
+
+이전 연구의 역할별 `configs/`, `docs/experiments/`, `results/` 구성을 따르되, 각 실험 코드를 별도 디렉터리로 분리한다. 현재 E0 외의 단계별 폴더와 구현 코드는 해당 단계가 시작될 때 만든다.
 
 ```text
 gradresearch_mast3r_slam/
-  docs/
-    plans/mast3r_slam_runway_geometry_diagnostic_plan_v1.md
-    experiments/
-  configs/diagnostics/
-  src/diagnostics/
-    provenance.py
-    coordinate_contract.py
-    runway_roi.py
-    local_plane.py
-    overlap_seams.py
-    pose_revision.py
-    observability.py
-  scripts/
-    export_stage_snapshots.py
-    evaluate_runway_seams.py
-    plot_tracking_seam_timeline.py
-  tests/
-    test_sim3_invariance.py
-    test_pose_roundtrip.py
-    test_same_surface_overlap.py
-    test_export_parity.py
-  results/<experiment_id>/<scene>/<run_id>/
+  docs/experiments/<E코드>_<단계명>/  # 실험 계획·결과 보고서
+  configs/<E코드>_<단계명>/           # 설정·manifest·패치
+  results/<E코드>_<단계명>/<날짜>/<run_id>/  # 로그와 생성 결과 (Git 제외)
+  scripts/<E코드>_<단계명>/           # 해당 단계 전용 스크립트
+  src/diagnostics/                    # 검증 후 공유하는 분석 코드
+  data/                               # 공통 입력 및 데이터 manifest (Git 제외)
+  thirdparty/                         # 공통 upstream·환경·체크포인트 (Git 제외)
 ```
 
-원본 MASt3R-SLAM 패키지를 가능한 변경하지 않고 logging wrapper/adapters를 권장한다. 내부 코드 수정이 불가피하면 patch만 분리하고 upstream parity test를 통과시킨다.
+E0의 기존 결과는 `results/E0_environment_preparation/2026-10-27/`에, 보고서와 manifest·패치는 같은 단계명의 문서/설정 폴더에 있다. 원본 데이터와 공통 환경은 공유하되 각 실행에서 입력 경로·hash와 설정을 기록한다. 단계 간 결과를 재사용할 때는 원본을 변경하지 않고 출처를 manifest에 명시한다. upstream이 자체 `logs/`에 쓰는 결과는 실행 후 해당 실험의 결과 폴더로 옮기고 당시 경로도 기록한다. 원본 MASt3R-SLAM 패키지를 가능한 변경하지 않고 logging wrapper/adapters를 권장한다. 내부 코드 수정이 불가피하면 patch만 분리하고 upstream parity test를 통과시킨다.
 
 ---
 
