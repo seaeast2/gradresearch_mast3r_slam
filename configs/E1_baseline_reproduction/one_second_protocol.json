@@ -1,0 +1,15 @@
+{
+  "experiment": "E1_R0_1s",
+  "dataset": "HKairport01",
+  "window": "[60s, 120s) relative to first RGB",
+  "input_frame_count": 240,
+  "frame_manifest": "data/HKairport01/mapping_frames.csv",
+  "image_size_long_side": 512,
+  "keyframe_buffer": 32,
+  "minimum_keyframe_seconds": 1.0,
+  "timestamp": "original rgb_timestamp",
+  "policy": "defer normal tracking keyframe candidates until one second after last keyframe; relocalization may create exceptions",
+  "modes": ["baseline", "instrumented_export_and_tracking_trace"],
+  "purpose": "check 1s MASt3R-SLAM output, provenance parity and visually inspect runway without comparing 1s and 2s geometry",
+  "limitations": "normal 1s minimum is not periodic 1s sampling; same surface matching and full fusion ancestry are not established"
+}

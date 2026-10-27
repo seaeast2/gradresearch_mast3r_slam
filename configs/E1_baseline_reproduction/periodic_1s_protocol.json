@@ -1,0 +1,14 @@
+{
+  "experiment": "E1_periodic_1s",
+  "intent": "attempt a keyframe at the first successfully tracked input at least 1.0 s after the last keyframe",
+  "dataset": "data/HKairport01/mapping",
+  "frame_timestamp_csv": "data/HKairport01/mapping_frames.csv",
+  "input_frame_count": 240,
+  "camera_model": "uncalibrated",
+  "image_long_side": 512,
+  "keyframe_buffer": 64,
+  "minimum_keyframe_seconds": 1.0,
+  "force_periodic_keyframes": true,
+  "exceptions": "tracking failure/relocalization or no input at the desired timestamp; real frame times are irregular",
+  "goal": "single-condition E1 map, keyframe source and tracking timeline; no comparison between 1s and 2s geometry"
+}

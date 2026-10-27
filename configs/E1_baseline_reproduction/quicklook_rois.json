@@ -1,0 +1,11 @@
+{
+ "note": "Exploratory image-space pavement polygons drawn from RGB keyframe images before viewing source-colored geometry. They are not verified same-physical-surface correspondences.",
+ "image_shape_hw": [416, 512],
+ "polygons_xy": {
+  "0": [[5,194],[505,132],[505,191],[5,263]],
+  "1": [[294,195],[509,175],[509,232],[295,261]],
+  "2": [[331,199],[509,181],[509,239],[331,264]],
+  "3": [[350,198],[509,183],[509,239],[350,262]],
+  "4": [[371,183],[509,170],[509,222],[371,247]]
+ }
+}

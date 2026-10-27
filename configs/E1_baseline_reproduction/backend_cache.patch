@@ -1,0 +1,20 @@
+--- a/main.py
++++ b/main.py
+@@ -140,6 +140,8 @@
+         else:
+             factor_graph.solve_GN_rays()
+ 
++        if cfg.get("release_backend_cuda_cache", False):
++            torch.cuda.empty_cache()
+         with states.lock:
+             if len(states.global_optimizer_tasks) > 0:
+                 idx = states.global_optimizer_tasks.pop(0)
+@@ -178,6 +180,8 @@
+     load_config(args.config)
+     if args.low_vram and not config["single_thread"]:
+         parser.error("--low-vram requires config single_thread: true")
++    if args.low_vram:
++        config["release_backend_cuda_cache"] = True
+     print(args.dataset)
+     print(config)
+ 

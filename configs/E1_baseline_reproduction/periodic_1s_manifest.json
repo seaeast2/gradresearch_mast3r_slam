@@ -1,0 +1,55 @@
+{
+  "experiment": "E1_periodic_1s",
+  "status": "executed_step_suspected_not_confirmed",
+  "dataset": "HKairport01",
+  "original_window": "[60s,120s)",
+  "input_frames": 240,
+  "upstream_commit": "e6f4e3d474fad0e11f561482012be864ba8c3f17",
+  "checkpoint_sha256": "e28f91b488554653e2b46ddae9c78c1143e0bcb2e27d3e26cdb0b717f1568eb2",
+  "keyframes": 53,
+  "kf_time_gap_seconds": {
+    "min": 1.0000052452087402,
+    "median": 1.1998940706253052,
+    "max": 1.4001529216766357
+  },
+  "point_count": 10376415,
+  "image_shape_hw": [
+    416,
+    512
+  ],
+  "tracking_events": 239,
+  "logged_tracking_success": 239,
+  "tracking_failures": 0,
+  "reloc_events": 0,
+  "sampled_gpu_peak_mib": 7150,
+  "elapsed_seconds": 161.45,
+  "baseline_ply_sha256": "7745b3f2bb7a281151b7c7c2c9acfb1f93b40b96827c5438a60b25cd294530be",
+  "instrumented_ply_sha256": "7745b3f2bb7a281151b7c7c2c9acfb1f93b40b96827c5438a60b25cd294530be",
+  "baseline_trajectory_sha256": "25a68a01327cfab8ea2733a37bb1a80677e56aebb1386c81a7ba6fa3e146d7f0",
+  "instrumented_trajectory_sha256": "25a68a01327cfab8ea2733a37bb1a80677e56aebb1386c81a7ba6fa3e146d7f0",
+  "source_ids": "keyframe ID and canonical pixel; not full fusion ancestry",
+  "patch_and_input_hashes": {
+    "configs/E0_environment_preparation/mast3r_slam_pytorch27_compat.patch": "f346abe856bf11dbf5f7bac3668c58d58115f1923662c9ca0219553c008eae2a",
+    "configs/E0_environment_preparation/mast3r_slam_low_vram.patch": "d35bfcecca564ab8a21e3beb787ab5017ead86a400162ff11ca589c45ae82bfc",
+    "configs/E0a_keyframe_spacing/keyframe_spacing.patch": "0e899f5973689e13cc27ebe46e5950f68e8c179d986af3b278377c8f42a378cc",
+    "configs/E1_baseline_reproduction/export_provenance.patch": "dfd93804af716657d6b4e00bf58b410fe7b1bd17c6aa17f678bafdacbf60d3c1",
+    "configs/E1_baseline_reproduction/tracking_trace.patch": "8f6d59818ad3dd97152be8d11cc16ee1457487bdae585cb4d6995e36336d5016",
+    "configs/E1_baseline_reproduction/periodic_keyframes.patch": "db25a81f9cab07ba5149949743dbc59a0feffb2cc6962e89eb92cd42a891d2b7",
+    "configs/E1_baseline_reproduction/backend_cache.patch": "3b63add8310f64a35957601a4212ff271e77a0f38c2e895c01f4c6992aa289ff",
+    "configs/E0_environment_preparation/low_vram_base.yaml": "48dd2a1a407f421a485b83a0b74bb329b138f0173e0be21c453e081736a4d1f9",
+    "configs/E1_baseline_reproduction/periodic_1s_protocol.json": "f2ad43bba7bd18a76bdf04de947860a4d118d89b80222f1778c554e8dd7a096a",
+    "configs/E1_baseline_reproduction/periodic_1s_rois.json": "58cfc1358c70982e111329af42d8d1ae6954e74148b3b168d6ac7d570d8d99af",
+    "scripts/E1_baseline_reproduction/inspect_periodic_1s.py": "de6b562fdb7046093d9f50af7d701774061634b287d921a2ce2cb8219be1c6b8",
+    "scripts/E1_baseline_reproduction/visualize_1s.py": "82a6d03c1aa80bfeae880fb08434e55e1f1dd2d031128d2304b6d1ccf4ba81b0",
+    "scripts/E1_baseline_reproduction/run_periodic_1s.sh": "dcb40f9308950501aed8faafe382d3d685d955caba1e53a380f98e513fe3e957",
+    "data/HKairport01/mapping_frames.csv": "f8fce8e33b7d6aaa3bb6c0e340924b318016224aba4672d7786d874f545d2fb7"
+  },
+  "limitations": [
+    "same physical surface correspondence not verified",
+    "low-memory and periodic policy differ from upstream baseline",
+    "GPU sampled once per second",
+    "1s and 2s geometry comparison not performed",
+    "instrumentation parity tested only on this single run pair"
+  ],
+  "initialization_frames": 1
+}

@@ -1,0 +1,51 @@
+--- a/main.py
++++ b/main.py
+@@ -163,6 +163,7 @@
+     parser.add_argument("--low-vram", action="store_true")
+     parser.add_argument("--frame-time-csv", default="")
+     parser.add_argument("--min-keyframe-seconds", type=float, default=0.0)
++    parser.add_argument("--force-periodic-keyframes", action="store_true")
+ 
+     args = parser.parse_args()
+ 
+@@ -170,6 +171,8 @@
+         parser.error("--min-keyframe-seconds must be finite and nonnegative")
+     if args.min_keyframe_seconds and not args.frame_time_csv:
+         parser.error("--min-keyframe-seconds requires --frame-time-csv")
++    if args.force_periodic_keyframes and args.min_keyframe_seconds <= 0:
++        parser.error("--force-periodic-keyframes requires a positive --min-keyframe-seconds")
+     if args.keyframe_buffer < 1:
+         parser.error("--keyframe-buffer must be positive")
+     load_config(args.config)
+@@ -315,7 +318,10 @@
+             if args.min_keyframe_seconds:
+                 last_kf_id = keyframes.last_keyframe().frame_id
+                 allow_new_kf = timestamp - dataset.timestamps[last_kf_id] >= args.min_keyframe_seconds
+-            add_new_kf, match_info, try_reloc = tracker.track(frame, allow_new_kf=allow_new_kf)
++            add_new_kf, match_info, try_reloc = tracker.track(
++                frame, allow_new_kf=allow_new_kf,
++                force_new_kf=args.force_periodic_keyframes and allow_new_kf,
++            )
+             if os.environ.get("E1_PROVENANCE_PATH"):
+                 print(f"E1_TRACK frame={i} timestamp={timestamp:.9f} reference_kf={len(keyframes)-1} success={int(not try_reloc)} new_kf={int(add_new_kf)}", flush=True)
+             if try_reloc:
+--- a/mast3r_slam/tracker.py
++++ b/mast3r_slam/tracker.py
+@@ -25,7 +25,7 @@
+     def reset_idx_f2k(self):
+         self.idx_f2k = None
+ 
+-    def track(self, frame: Frame, allow_new_kf=True):
++    def track(self, frame: Frame, allow_new_kf=True, force_new_kf=False):
+         keyframe = self.keyframes.last_keyframe()
+ 
+         idx_f2k, valid_match_k, Xff, Cff, Qff, Xkf, Ckf, Qkf = mast3r_match_asymmetric(
+@@ -109,6 +109,8 @@
+ 
+         new_kf = min(match_frac_k, unique_frac_f) < self.cfg["match_frac_thresh"]
+ 
++        if force_new_kf and allow_new_kf:
++            new_kf = True
+         if new_kf and not allow_new_kf:
+             print(f"KF_DEFERRED frame={frame.frame_id}")
+             new_kf = False

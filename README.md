@@ -9,7 +9,7 @@
 
 현재 E0의 8 GB용 환경 준비는 완료됐다. 512 입력·KF buffer 32 설정에서 HKairport01 240프레임을 실행했으며, E1의 단차 진단과 이후 실험은 아직 수행하지 않았다. 원본 설정과의 수치 parity 및 실제 timestamp 적용은 별도 확인이 필요하다.
 
-현재 HKairport01 탐색 실행은 실제 촬영 시각 기준 **2초 최소 keyframe 간격**을 사용한다. 동일 입력 비교에서 19개에서 6개로 줄었으며, 이 결과는 기하 개선의 증거가 아니다. 상세 조건과 재실행 방법은 [E0a 결과](docs/experiments/E0a_keyframe_spacing/E0a_keyframe_spacing_results.md)를 참조한다. 기존 정책은 E1 대조군으로 보존한다.
+현재 HKairport01 E1 실행은 실제 촬영 시각 기준 **가능하면 1초마다 keyframe을 생성**한다. 240프레임에서 53개 keyframe이 생성됐으며, 단차는 예비 의심 상태다. 상세 조건과 결과는 [E1 실행 결과](docs/experiments/E1_baseline_reproduction/E1_periodic_1s_results.md)를 참조한다. 기존 2초 설정 결과는 이력으로 보존한다.
 
 ## 실험 코드와 폴더
 

@@ -1,0 +1,30 @@
+{
+  "status": "exploratory_step_candidate_not_confirmed",
+  "run": "E1_hk_2s_provenance",
+  "input_frame_count": 240,
+  "keyframes": 6,
+  "image_hw": [
+    416,
+    512
+  ],
+  "input_size_setting": 512,
+  "minimum_keyframe_seconds": 2,
+  "keyframe_buffer": 32,
+  "single_thread": true,
+  "source_commit": "e6f4e3d474fad0e11f561482012be864ba8c3f17",
+  "weights_sha256": "e28f91b488554653e2b46ddae9c78c1143e0bcb2e27d3e26cdb0b717f1568eb2",
+  "world_ply_sha256": "99f85cf7651031c12c0e7919f374bac65f5449e62f6da5ad212731bbcfd95628",
+  "same_configuration_previous_run_ply_sha256_identical": true,
+  "point_count": 1192768,
+  "source_ids": "keyframe index and canonical pixel index per exported vertex; not original fusion input provenance",
+  "scope": "exploratory surface ROIs, 2D binned geometric comparison; no verified physical correspondences",
+  "hashes": {
+    "data/HKairport01/mapping_frames.csv": "f8fce8e33b7d6aaa3bb6c0e340924b318016224aba4672d7786d874f545d2fb7",
+    "configs/E0_environment_preparation/low_vram_base.yaml": "48dd2a1a407f421a485b83a0b74bb329b138f0173e0be21c453e081736a4d1f9",
+    "configs/E0a_keyframe_spacing/keyframe_spacing.patch": "0e899f5973689e13cc27ebe46e5950f68e8c179d986af3b278377c8f42a378cc",
+    "configs/E1_baseline_reproduction/export_provenance.patch": "dfd93804af716657d6b4e00bf58b410fe7b1bd17c6aa17f678bafdacbf60d3c1",
+    "configs/E1_baseline_reproduction/quicklook_rois.json": "8bacdbeab5156e89011e3db16fb7b1ab44ee08384a7525596a14c41a63bdc874",
+    "scripts/E1_baseline_reproduction/quicklook.py": "a065312e6e50b110e856d74309db3d582313f3592e523a222f856eafda7009d0",
+    "scripts/E1_baseline_reproduction/inspect_provenance.py": "398b92a90d8d66de976ba80c5319b98fc361346bcbf504e290be42a7ceff3759"
+  }
+}

@@ -1,0 +1,26 @@
+--- a/main.py
++++ b/main.py
+@@ -1,6 +1,7 @@
+ import argparse
+ import csv
+ import math
++import os
+ import datetime
+ import pathlib
+ import sys
+@@ -315,11 +316,15 @@
+                 last_kf_id = keyframes.last_keyframe().frame_id
+                 allow_new_kf = timestamp - dataset.timestamps[last_kf_id] >= args.min_keyframe_seconds
+             add_new_kf, match_info, try_reloc = tracker.track(frame, allow_new_kf=allow_new_kf)
++            if os.environ.get("E1_PROVENANCE_PATH"):
++                print(f"E1_TRACK frame={i} timestamp={timestamp:.9f} reference_kf={len(keyframes)-1} success={int(not try_reloc)} new_kf={int(add_new_kf)}", flush=True)
+             if try_reloc:
+                 states.set_mode(Mode.RELOC)
+             states.set_frame(frame)
+ 
+         elif mode == Mode.RELOC:
++            if os.environ.get("E1_PROVENANCE_PATH"):
++                print(f"E1_RELOC frame={i} timestamp={timestamp:.9f}", flush=True)
+             X, C = mast3r_inference_mono(model, frame)
+             frame.update_pointmap(X, C)
+             states.set_frame(frame)

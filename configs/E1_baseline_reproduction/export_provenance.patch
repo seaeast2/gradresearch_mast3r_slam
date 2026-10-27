@@ -1,0 +1,39 @@
+diff --git a/mast3r_slam/evaluate.py b/mast3r_slam/evaluate.py
+index c5605b1..1b719f0 100644
+--- a/mast3r_slam/evaluate.py
++++ b/mast3r_slam/evaluate.py
+@@ -1,4 +1,5 @@
+ import pathlib
++import os
+ from typing import Optional
+ import cv2
+ import numpy as np
+@@ -49,6 +50,7 @@ def save_reconstruction(savedir, filename, keyframes, c_conf_threshold):
+     savedir.mkdir(exist_ok=True, parents=True)
+     pointclouds = []
+     colors = []
++    source_keyframes, source_pixels, frame_ids = [], [], []
+     for i in range(len(keyframes)):
+         keyframe = keyframes[i]
+         if config["use_calib"]:
+@@ -64,10 +66,20 @@ def save_reconstruction(savedir, filename, keyframes, c_conf_threshold):
+         )
+         pointclouds.append(pW[valid])
+         colors.append(color[valid])
++        if os.environ.get("E1_PROVENANCE_PATH"):
++            source_keyframes.append(np.full(np.count_nonzero(valid), i, dtype=np.int32))
++            source_pixels.append(np.flatnonzero(valid).astype(np.int32))
++            frame_ids.append(keyframe.frame_id)
+     pointclouds = np.concatenate(pointclouds, axis=0)
+     colors = np.concatenate(colors, axis=0)
+ 
+     save_ply(savedir / filename, pointclouds, colors)
++    provenance_path = os.environ.get("E1_PROVENANCE_PATH")
++    if provenance_path:
++        np.savez_compressed(provenance_path, kf_id=np.concatenate(source_keyframes),
++                            pixel_index=np.concatenate(source_pixels),
++                            frame_ids=np.asarray(frame_ids, dtype=np.int32),
++                            image_shape=np.asarray((keyframes.h, keyframes.w), dtype=np.int32))
+ 
+ 
+ def save_keyframes(savedir, timestamps, keyframes: SharedKeyframes):

@@ -122,7 +122,7 @@ Export / downstream GS (진단용 선택)
 
 ### E1 (R0) — 원본 재현과 provenance 확인
 
-**현재 실행 설정:** HKairport01의 후속 탐색은 실제 촬영 시각 기준 keyframe 최소 간격 2초를 우선 사용한다. 이는 선택 정책을 바꾼 실행이므로 원본 정책 baseline과 명확히 구분해 둘 다 보존한다. [E0a 테스트](experiments/E0a_keyframe_spacing/E0a_keyframe_spacing_results.md)의 최소 간격은 정상 tracking 후보에만 적용되며 재위치 keyframe은 예외다. 기존 정책에서 G0 단차 여부를 먼저 확인하고, 2초 정책의 기하·coverage는 별도로 평가한다. 이전 E0a 실행만으로 단차 개선을 주장하지 않는다.
+**현재 실행 설정:** 사용자 요청에 따라 HKairport01을 실제 촬영 시각 기준 가능한 한 1초마다 keyframe을 생성하여 실행한다. 입력 timestamp의 불규칙성과 추적/재위치 실패에 따라 간격은 달라질 수 있다. 실행은 64 KF buffer, single-thread 및 backend CUDA 캐시 반환을 사용하며 공식 기본 설정과 구분한다. 사용자 요청에 따라 1초와 2초 정책의 기하 비교는 수행하지 않는다. [E1 실행 기록](experiments/E1_baseline_reproduction/E1_periodic_1s_results.md)을 따른다.
 
 **목적:** MASt3R-SLAM 단독 baseline이 관찰된 단차를 재현하는지 확정. 기존 Splatt3R-SLAM PLY만의 단차라면 별도 후단 문제이다.
 
