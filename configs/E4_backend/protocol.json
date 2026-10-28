@@ -1,0 +1,11 @@
+{
+  "purpose": "Measure changes in candidate overlap geometry caused by each backend pose revision with local maps frozen",
+  "keyframes": [31, 32, 33, 34, 35],
+  "pairs": [[32, 35], [31, 34], [33, 35]],
+  "roi": "configs/E1_baseline_reproduction/periodic_1s_rois.json",
+  "correspondences": "E2a optical flow candidates, not independently validated pixel ground truth",
+  "reference_run": "results/E1_baseline_reproduction/2026-10-27/periodic_1s_retry",
+  "local_geometry": "E3 initial self pointmaps and last per-keyframe fusion snapshots, matched to E4 backend snapshots before use",
+  "pose_comparison": "for each backend solve after KF36 exists, apply its pre and post pose to the same frozen map points; signed normal is from pre-solve source points; same support throughout",
+  "limitations": "frozen geometry at earlier historical poses is a controlled replay, not necessarily the historical map; comparisons are internal consistency, no GT or metric scale; pose updates can be coupled with earlier tracking and fusion"
+}
