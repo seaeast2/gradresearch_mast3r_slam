@@ -1,0 +1,10 @@
+{
+  "experiment": "E6-T-FUS", "registered_before_analysis": true,
+  "source": "E3 actual ROI events KF31-35; E2a candidate correspondences; E4 backend events",
+  "intervention": "For each KF remove only its first captured tracking fusion input, keeping initial map, all later saved inputs and their poses fixed; compare to replay with all inputs.",
+  "support": "All E3 ROI pixels separately from E2a candidates with finite E1 export points; fixed per pair for both arms; no new validity selection; candidates not independently verified.",
+  "fixed_normal": "PCA of E2a source KF final E1 world candidate points, signed toward positive world Z; fixed across both arms and poses.",
+  "metrics": "local camera Z and initial-ray displacement, plane residual normalized by initial ROI span; candidate world signed and absolute normal, tangent, absolute Z, XY median and p90; retain counts and candidate coordinates; E4 KF36 pre/post and KF52 post.",
+  "controls": "Unmodified replay parity with every E3 state and final export; synthetic weighted outlier removal and no-outlier replay; verified seam-free real ROI unavailable is INSUFFICIENT_SUPPORT.",
+  "interpretation": "Conditional influence only; no claim of metric accuracy, improvement, generalization, or rerun of downstream tracking; no post-hoc success threshold."
+}
