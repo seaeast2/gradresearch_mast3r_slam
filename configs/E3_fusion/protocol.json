@@ -1,0 +1,11 @@
+{
+  "purpose": "Record actual tracking and per-keyframe confidence-weighted canonical pointmap updates for E1 KF31-35",
+  "keyframes": [31, 32, 33, 34, 35],
+  "roi": "configs/E1_baseline_reproduction/periodic_1s_rois.json",
+  "source_run": "results/E1_baseline_reproduction/2026-10-27/periodic_1s_retry",
+  "settings": "same inputs, checkpoint, uncalibrated, 512 long side, single thread, 64 KF buffer, 1 s forced periodic keyframes, low VRAM",
+  "probe": "monkeypatch tracker functions in parent process; save ROI arrays before and after original update, including incoming transformed pointmap, confidences, match validity and relative Sim3; no modification of model inputs or outputs",
+  "verification": "exact final PLY and trajectory SHA-256 comparison to E1; evaluate N and weighted update arithmetic and sequential continuity",
+  "metrics": "PCA absolute orthogonal p90 normalized by initial ROI projected bounding-box diagonal; update and cumulative normal displacement, confidence weights and correspondence validity",
+  "limitations": "image polygons are exploratory and may not be perfectly planar; no ground truth; tracking and fusion are coupled; final export parity alone is not intermediate full parity"
+}
