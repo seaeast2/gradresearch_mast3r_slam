@@ -42,6 +42,8 @@
 
 **주의:** 활주로는 완벽한 수평면이 아닐 수 있다(횡단 경사·종단 경사·배수구조). 연구의 주 표적은 *절대 z=상수* 가 아니라 **같은 물리적 위치를 서로 다른 관측이 일관되게 표현하는가**이다.
 
+**E5 이후 관찰 — Z 방향 중복:** 사용자는 CloudCompare에서 포장면이 화면상 XY 방향으로 대체로 겹치지만 깊이 방향으로 여러 층을 형성한다고 보고했다. 이 관찰을 E6의 주요 평가 대상으로 추가한다. 해당 화면의 좌표축·view 방향은 스크린샷만으로 확인할 수 없으며, world Z·camera Z·표면 법선 방향은 서로 다른 개념이다. E1 지도에서 KF29 기준 ROI 평면 법선은 world Z에서 약 4.7° 떨어져 있어 이 영역에서는 world Z가 법선 방향과 가깝다. 다만 실제 중력 정렬이나 metric 단위는 확인되지 않았고, Z 방향 층 분리만으로 원본 네트워크의 깊이 추정이 주원인이라고 판정하지 않는다. 기존 대응 후보에서 축별 차이를 별도로 계산한 예비 관찰은 [E5 축별 관찰](experiments/E5_timeline/E5_axis_observation.md)에 기록한다.
+
 ---
 
 ## 1. 파이프라인과 계측 지점
@@ -177,6 +179,15 @@ Export / downstream GS (진단용 선택)
 
 **조기 중단 원칙:** R0–R4 중 실패 단계가 특정되면 **그 단계의 가장 단순한 대조실험 1개**만 실행한다. 네트워크 재학습, full joint-optimizer, dense mesh 생성, 3DGS refinement는 하지 않는다.
 
+### E5 이후 E6-T-FUS에 추가할 깊이 방향 진단
+
+E5에서 첫 fusion 입력의 큰 이동과 tracking 거리 검사 탈락이 관찰되어 E6의 우선 후보를 T-FUS로 지정한다. 아래 항목은 **추가 평가·계측 계획**이며 아직 실행 결과가 아니다. 기존 값에 맞춰 사후 성공 임계치를 만들지 않는다.
+
+1. **좌표와 관측 방향:** canonical keyframe-local camera Z, 원점으로부터의 ray 방향 거리, world Z와 검증된 포장면 기준 평면의 법선 및 접선 방향을 구분한다. 관측 이전·이후를 같은 KF local 좌표와 고정된 픽셀 support에서 비교한다. 서로 다른 카메라의 Z 값을 직접 빼지 않고, 각 점을 명시된 Sim(3)으로 공통 좌표계에 변환한다. 원본 pair의 cross 점은 저장된 상대 Sim(3)의 역변환으로 복원할 수 있되 round-trip과 저장된 원본이 있을 때의 parity를 먼저 확인한다. Camera Z 또는 ray 방향은 측정 가능한 깊이 성분이지 기준 깊이의 정확도 자체가 아니다.
+2. **동일 support와 분해:** E2a 영상 대응 후보와 E3 전체 ROI를 별도로 보고하고, 공통 후보·export 가능한 점·변경 후 유효 점의 수와 공간 분포를 보존한다. 후보의 correctness/visibility는 독립 검증 전까지 후보로 표시한다. 후보 대응별 world 차이 벡터를 고정된 기준 법선 `n`에 대해 `d_n=nᵀΔX`, `d_t=||(I−nnᵀ)ΔX||`로 나누고 world의 `|ΔZ|`와 `||(ΔX,ΔY)||`도 같은 점에서 산출한다. 중앙값·p90 및 부호 있는 normal 차이 분포를 보고한다. 평면 법선은 동일 비교에서 고정하고 ground truth가 없으면 normal의 물리적 높이 의미는 주장하지 않는다.
+3. **원본·fusion·배치 대조:** 동일 입력의 초기, 각 실제 fusion 전/입력/후, 마지막 fused pointmap을 KF-local camera Z 및 ray 성분으로 분석한다. 앞뒤의 적용 pose 및 confidence/매칭 유효성은 함께 기록한다. E4에서 기록된 동일 pre/post Sim(3)과 동일 pointmap으로 world normal/Z 성분 변화도 측정한다. Frozen pose와 frozen input으로 최초 fusion 입력 하나만 제외한 replay와 원본 replay를 비교하며, 원본 가중 평균식 및 E3 output parity를 먼저 검증한다. 이 변경은 나머지 입력·pose를 원래 실행에서 고정하므로 후속 tracking까지 다시 실행한 결과가 아니다.
+4. **판정과 대조:** normal/Z 차이와 접선/XY 차이가 모두 보존·변화하는 양상을 함께 제시해 특정 축만 좋아지는 대신 옆으로 흐르거나 coverage가 줄어드는 경우를 표시한다. 사용자 확인 포장면과 별도로 seam이 낮은 후보 영역의 음성 대조를 찾고 독립 correspondences·가시성을 확인한다. 유효 support가 없으면 `INSUFFICIENT_SUPPORT`로 기록하고 임의의 0으로 채우지 않는다. 고정 pose replay에서 결과가 바뀌어도 그것은 관측값이 canonical map에 미친 조건부 영향이며 실제 depth 오류 또는 개선의 증거가 아니다. 외부 깊이/표면 reference QA 및 독립 시퀀스 검증 없이는 absolute depth 정확도, metric 오차, 일반화 또는 알고리즘 개선을 주장하지 않는다.
+
 ---
 
 ## 5. 정량 지표와 반증 가능성
@@ -191,6 +202,7 @@ Export / downstream GS (진단용 선택)
 - `map seam index`: 서로 다른 source KF의 overlap에서 불연속 residual이 사전 임계치를 초과한 비율. **새로 정의한 연구용 지표**이므로 정의/단위/임계치를 사전 등록.
 - `temporal association`: seam과 KF 경계·tracking loss·scale/revision event의 시간적 인접 여부. 부정 사례도 포함.
 - `support`: 유효 대응 점 개수, 겹침 KF 쌍, 면적, 관측 angle/parallax 및 score 불능 구간 비율.
+- `axis/ray decomposition`: 동일 대응의 world `|ΔZ|`, XY 크기, 고정 기준 평면 normal 및 접선 성분의 중앙값·p90; 같은 KF-local frame에서의 camera-Z와 ray 방향 fusion 전후 변화. 축 방향과 좌표계를 명시하고 두 관측의 대응 품질 및 coverage를 병기한다. 이 수치 자체는 metric depth error가 아니다.
 
 **(B) 물리적 정확도 — 신뢰할 수 있는 기준자료가 있을 때만**
 

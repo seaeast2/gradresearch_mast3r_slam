@@ -1,0 +1,10 @@
+{
+  "purpose": "Associate E1 tracking, E3 ROI matching/fusion, E4 backend and independent image motion without causal claims",
+  "scope": "all 240 E1 frames; detailed ROI analysis for KF31-35 and 23 E3 updates; E4 frozen-map pair events from KF36 onward",
+  "texture": "Sobel magnitude in grayscale [0,1] on original keyframe ROI, median and p90; cornerMinEigenVal in ROI; absolute values depend on resize and intensity",
+  "independent_optical_flow": "OpenCV LK from keyframe image to input frame, grid 5px within the original ROI, forward-backward <=1px, normalized cross correlation of 9x9 patches >=0.8; estimates candidate image displacement, not geometric parallax",
+  "alignment": "E3 events use frame timestamp and reference_kf from E1; E4 backend pose revisions are attached to the frame that created that keyframe; pair seams are fixed-map experiments and only KF36+ are included",
+  "separation": "E4 signed overlap medians use independent fixed normal per pair; do not compare sign across pairs and do not interpret as metric heights",
+  "controls": "first vs subsequent update and within-ROI texture quartiles are descriptive comparisons, not independent negative controls; no confirmed normal seam-free ROI",
+  "limitations": "candidate flow is not ground truth; 2D displacement includes camera rotation and does not measure geometric parallax; unknown scene calibration and matched support; no independent causality"
+}
