@@ -1,0 +1,16 @@
+{
+  "purpose": "Identify image-supported common pavement ROI and compare replayed raw pointmaps and the E1 final map, without claiming a cause",
+  "pairs": [[32, 35], [31, 34], [33, 35]],
+  "tracking": "OpenCV pyramidal Lucas-Kanade over every intermediate input frame, both directions",
+  "grid_step_pixels": 5,
+  "roi_erode_pixels": 5,
+  "forward_backward_max_pixels": 1.0,
+  "patch_ncc_min": 0.8,
+  "patch_radius_pixels": 4,
+  "minimum_matches": 30,
+  "minimum_xy_span_pixels": [20, 10],
+  "holdout": "spatially interleaved 20-pixel source-image grid tiles; even parity fit, odd parity evaluate, then swap",
+  "sim3": "least-squares isotropic similarity from one raw pointmap to the other; fitted alignment removes a global rigid/scale difference and cannot assess original world placement",
+  "e1_map": "sample original exported KF/pixel XYZ using provenance and independently selected correspondences; no additional alignment",
+  "limitations": "textureless areas cannot be verified by optical flow; overlap and plane assumptions need image review; no metric scale"
+}
