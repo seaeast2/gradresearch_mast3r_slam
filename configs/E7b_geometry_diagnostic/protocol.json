@@ -1,0 +1,17 @@
+{
+  "status": "exploratory E7b, E7/E7a already examined; user visually confirmed U-shaped scene is a single surface and requests excluding terrain/building-mixture hypothesis",
+  "sequence": "AMtown01 E7 same 240 PNGs, settings, weights, one-second forced KF policy",
+  "scope": "Preserve user-confirmed surface observation; existing E7a road/shoulder LK candidates remain individually unverified and are not claimed to cover whole visually identified U-shaped surface.",
+  "local_vs_world": "E7a KF8-12 initial and final ROI points, fixed E7a candidate pixels; estimate plane shape per KF with identical pixel support and compare frozen final map under saved backend pre/post Sim3 from KF13 onward. Use fixed final-world source normal; report z, normal and tangent, XY distribution; include individual pose updates and pairs.",
+  "curvature": "Use diagnostic orthogonal views and KF provenance only; globally quantify U-shape only with verified surface masks and coverage, otherwise INSUFFICIENT_SUPPORT.",
+  "camera": "Audit AMtown calibration physical plausibility, pixel mapping and distortion roundtrip; JPG preprocessing and calibration correspondence not independently verified. Conditional undistortion sensitivity can be performed without calling calibration validated, measuring all support and fixed correspondences; no metric accuracy or lens-cause claim.",
+  "controls": "baseline output parity; Sim3 gauge and roundtrip; fixed support; actual backend revisions only after final ROI frozen; keep insufficient support and unverified negative control explicit. No post-hoc threshold.",
+  "limitations": "First-KF gauge does not establish physical gravity or scale; no external surface ground truth; LK candidate matching not individually verified; prior same sequence was tuned and inspected.",
+  "conditional_raw_pre_execution": {
+    "hypothesis": "Assume original JPG retains published raw distortion; this is unverified and conditional only.",
+    "frames": "KF8,9,10 birth and immediately prior KF, native versus full-resolution OpenCV undistort with same K",
+    "support": "E7a source RGB correspondences with export common support; map original pixel to assumed undistorted pixel; require inverse roundtrip <0.1 native px and image bounds; report exclusions; interpolate undistorted prediction",
+    "comparison": "pair self-branch raw local PCA residual p90 / ROI span; original raw parity to E7a captured birth; no pointwise 3D subtraction across arbitrary gauges; no post-hoc success criterion",
+    "scope": "does not rerun tracking/backend, so does not test distortion-caused pose drift"
+  }
+}
