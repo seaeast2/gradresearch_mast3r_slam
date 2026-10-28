@@ -1,0 +1,6 @@
+{
+ "status":"exploratory follow-up after broad-region image comparison; thresholds based on RGB appearance, not geometric outcome",
+ "selection":"Restrict E7d SIFT source and target to HSV brightness >=185 and saturation <=50 on both original RGB images; this is a conservative whiteness proxy, not a ground-truth walkway segmentation. Keep all such mutual SIFT candidates for 2D, and use 5-pixel homography consensus for 3D candidate support.",
+ "3d":"MASt3R symmetric pair inference of frames 0001 and 0072; self pointmaps X11 and X22 expressed in their own first/second camera coordinate systems. Use corresponding pixels mapped through exact resize/crop, bilinear sampling, rigid+uniform-scale similarity estimated from spatial training folds and evaluate held-out 3D residual normalized by target patch 3D extent. Compare local plane residual, confidence, valid samples. No SLAM tracking or backend used.",
+ "limitations":"Counts, exact candidate coordinate selection, fitting, apparent 2D differences do not establish independent point correctness, physical deformation or lens distortion; the white proxy also detects boundaries or other white features and ignores shadows. Pair model output depends on both images and may not match SLAM pointmaps."
+}

@@ -1,0 +1,10 @@
+{
+ "experiment":"E7c surface provenance and calibration QA", "status":"exploratory follow-up; E7/E7a/E7b data and user visual observation already known",
+ "surface_contract":"User has visually confirmed the U-shaped surface; accept this observation. No point-level surface mask, KF/pixel IDs, independent correspondence or visibility labels were supplied; do not infer a full ground mask from the screenshot or claim all exported vertices belong to that surface.",
+ "provenance":"Validate all E7 mapping.ply vertex-to-KF/pixel provenance, uniqueness and bounds, inspect 51 KF inputs and produce image-space export-support review sheets and traceable metadata. Exported pixels are observations, not verified surface masks.",
+ "independent_matching":"Audit separate SIFT and E7a LK candidates, spatial agreement and RGB examples; preserve unverified physical correctness. No G2 or G4 pass without independent verified surface correspondences and adequate pair support.",
+ "calibration":"Compare local public calibration against upstream reference, inspect original image metadata, image-to-map metadata and numerical inverse with explicit iteration settings and forward-distortion Jacobian. This is QA, not a replacement for verifying preprocessing or camera-frame relationships.",
+ "pose_gate":"Only claim calibrated pose comparison after actual JPG distortion model and common surface support are verified. Otherwise keep as not performed/INSUFFICIENT_SUPPORT; do not change results or create thresholds after outcomes.",
+ "visualization":"No plane fitting to all points and no claim that U shape is mixed terrain; support and provenance labels do not assert a physical class.",
+ "source":"E7/E7a/E7b artifacts and original AMtown01 archive, reused read-only."
+}

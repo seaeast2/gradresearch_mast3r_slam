@@ -1,0 +1,9 @@
+{
+ "purpose":"Compare the user-identified white park walkway in AMtown01 mapping frames 0001 and 0072 as exploratory image and pair-pointmap deformation, not external accuracy.",
+ "frames":[1,72],"image_dimensions":[2448,2048],
+ "source_polygon_native_pixels":[[1100,480],[1530,460],[1690,1300],[1260,1400]],
+ "candidate_correspondences":"SIFT at native resolution, mutual nearest-neighbor ratio 0.75 and source polygon; actual final pixel extent and in-bounds coverage recorded; no claim of correspondence GT.",
+ "image_models":"2D similarity (rotation, translation, isotropic scale), affine, projective homography; fit robustly with RANSAC 5 native pixels. Evaluation 4 independent spatial tile holdouts where possible; report both training-consensus and held-out error separately, and fit complexity; no ground truth of planar structure or distortion.",
+ "3d_optional":"If candidate support adequate, run MASt3R pair inference self pointmaps in their own camera coordinates, common image support, Sim3 registration and spatial holdout. Record pair inference differences from original trajectory and confidence and no GT. If insufficient do not claim 3D.",
+ "limits":"Perspective, crop, occlusion, illumination, change of view, matching errors, different scales and interpolation can cause apparent warp; cannot infer lens distortion, pose drift, or absolute depth accuracy from image correspondence alone."
+}
