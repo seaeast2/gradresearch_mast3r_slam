@@ -1,0 +1,7 @@
+{
+  "pairs": [[8,11],[9,12],[10,12]],
+  "method": "Pyramidal LK over each intermediate RGB frame, forward/backward <=1 pixel, endpoint in both ROIs, 9x9 patch NCC >=0.8",
+  "grid_step_pixels": 3, "roi_erode_pixels": 2,
+  "reason_for_grid_and_erosion": "RGB road polygons are narrow; fixed before computing candidate or geometric results, unlike E2a's wider ROI 5-pixel grid and erosion.",
+  "minimum_candidates": 30, "note": "Automatic tracks are candidate correspondences only. Compare only fixed common export support; record changed export validity with confidence >1.5 and N adjusted. No GT or independent visibility validation."
+}

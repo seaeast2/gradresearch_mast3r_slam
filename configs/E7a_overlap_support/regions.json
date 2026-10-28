@@ -1,0 +1,188 @@
+{
+  "note": "Selected from RGB images only; capture is intentionally broader than analysis regions. Road polygons reuse E7 source selections. Roof is a separate, approximately planar candidate surface; neither planarity nor seam-free status assumed.",
+  "keyframes": [
+    8,
+    9,
+    10,
+    11,
+    12
+  ],
+  "frame_ids": [
+    39,
+    44,
+    49,
+    54,
+    58
+  ],
+  "capture_polygons_xy": [
+    [
+      [
+        60,
+        0
+      ],
+      [
+        320,
+        0
+      ],
+      [
+        320,
+        120
+      ],
+      [
+        60,
+        120
+      ]
+    ],
+    [
+      [
+        350,
+        70
+      ],
+      [
+        511,
+        70
+      ],
+      [
+        511,
+        300
+      ],
+      [
+        350,
+        300
+      ]
+    ]
+  ],
+  "source_regions": {
+    "road": {
+      "8": [
+        [
+          401,
+          110
+        ],
+        [
+          412,
+          110
+        ],
+        [
+          435,
+          260
+        ],
+        [
+          423,
+          260
+        ]
+      ],
+      "9": [
+        [
+          405,
+          110
+        ],
+        [
+          416,
+          110
+        ],
+        [
+          439,
+          260
+        ],
+        [
+          427,
+          260
+        ]
+      ],
+      "10": [
+        [
+          413,
+          110
+        ],
+        [
+          424,
+          110
+        ],
+        [
+          447,
+          260
+        ],
+        [
+          435,
+          260
+        ]
+      ]
+    },
+    "roof": {
+      "8": [
+        [
+          181,
+          43
+        ],
+        [
+          202,
+          43
+        ],
+        [
+          202,
+          85
+        ],
+        [
+          181,
+          85
+        ]
+      ],
+      "9": [
+        [
+          191,
+          43
+        ],
+        [
+          212,
+          43
+        ],
+        [
+          212,
+          85
+        ],
+        [
+          191,
+          85
+        ]
+      ],
+      "10": [
+        [
+          201,
+          43
+        ],
+        [
+          222,
+          43
+        ],
+        [
+          222,
+          85
+        ],
+        [
+          201,
+          85
+        ]
+      ]
+    }
+  },
+  "pairs": [
+    [
+      8,
+      11
+    ],
+    [
+      9,
+      12
+    ],
+    [
+      10,
+      12
+    ]
+  ],
+  "rgb_review_amendment": {
+    "road_source_min_y": 165,
+    "reason": "RGB track overlay shows upper portion includes tree canopy rather than road; set before new geometry is inspected; retain original RGB candidates in initial_rgb_review",
+    "roof_status": "overlay shows multiple roof faces and ridge, so it is a heterogeneous candidate only, not a verified planar negative control"
+  }
+}

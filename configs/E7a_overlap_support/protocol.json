@@ -1,0 +1,10 @@
+{
+  "status": "exploratory follow-up to E7; E7 results already observed",
+  "sequence": "AMtown01, same 240 E7 mapping frames; no claim of untouched independent validation",
+  "selection": "Select static road and independent candidate control regions using RGB only, then track every intermediate frame and pre-register capture regions before inspecting new 3D or replay metrics. Reuse original KF8-12 and fixed E7 settings.",
+  "tracking": "LK forward/backward <=1 px and patch NCC >=0.8; no claim these filters alone prove correspondence. Independent SIFT matching and manual visual examination of named landmarks used as QA; report absent or ambiguous as insufficient support.",
+  "geometry": "Original versus one KF first fusion input excluded, other KF original. Same candidate pixel support, canonical E3 confidence weighted fusion, original versus excluded validity, frozen E7 final Sim3. Fixed source normal, median and p90 normal, tangential, Z, XY differences; units arbitrary. Verify unmodified replay and final export at shared pixel IDs.",
+  "negative_control": "Choose candidate control from separate static physical surface by RGB only; do not call seam-free without independent correspondence and geometry checks. Preserve failures and do not choose based on outcome.",
+  "gates": "Distinguish sampling candidates from independently verified correspondence. Apply original G2 threshold to independently verified support only; do not treat sampled points as area, or automatic feature checks as ground truth. G4 requires genuinely low-seam normal region and multiple KF boundaries. No threshold invented for low seam after examining results.",
+  "limits": "A second exploration on observed AMtown01 does not serve as untouched E7 independent validation; no metric or causal systemwide improvement claim."
+}

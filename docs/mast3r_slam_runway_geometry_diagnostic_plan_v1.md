@@ -40,7 +40,7 @@
 - H-E: Pointcloud/PLY export 및 후단 처리 때문에 단차가 새로 보이는 착시 또는 표현상의 왜곡이다.
 - H-O: 실제 동일 표면의 중복 관측이 적어 상기 원인 사이를 판별하기 어렵다.
 
-**주의:** 활주로는 완벽한 수평면이 아닐 수 있다(횡단 경사·종단 경사·배수구조). 연구의 주 표적은 *절대 z=상수* 가 아니라 **같은 물리적 위치를 서로 다른 관측이 일관되게 표현하는가**이다.
+**주의:** 활주로는 완벽한 수평면이 아닐 수 있다(횡단 경사·종단 경사·배수구조). 연구의 주 표적은 *절대 $z=\mathrm{constant}$* 가 아니라 **같은 물리적 위치를 서로 다른 관측이 일관되게 표현하는가**이다.
 
 **E5 이후 관찰 — Z 방향 중복:** 사용자는 CloudCompare에서 포장면이 화면상 XY 방향으로 대체로 겹치지만 깊이 방향으로 여러 층을 형성한다고 보고했다. 이 관찰을 E6의 주요 평가 대상으로 추가한다. 해당 화면의 좌표축·view 방향은 스크린샷만으로 확인할 수 없으며, world Z·camera Z·표면 법선 방향은 서로 다른 개념이다. E1 지도에서 KF29 기준 ROI 평면 법선은 world Z에서 약 4.7° 떨어져 있어 이 영역에서는 world Z가 법선 방향과 가깝다. 다만 실제 중력 정렬이나 metric 단위는 확인되지 않았고, Z 방향 층 분리만으로 원본 네트워크의 깊이 추정이 주원인이라고 판정하지 않는다. 기존 대응 후보에서 축별 차이를 별도로 계산한 예비 관찰은 [E5 축별 관찰](experiments/E5_timeline/E5_axis_observation.md)에 기록한다.
 
@@ -103,8 +103,8 @@ Export / downstream GS (진단용 선택)
 ### 2.2. 공통 좌표와 시간
 
 - 명시적으로 `pointmap source frame`, `anchor keyframe`, `camera-to-world/world-to-camera`, quaternion ordering, unit 및 Sim(3) composition convention을 기록한다.
-- MASt3R의 raw local scale과 keyframe placement scale을 **별도 보고**하되 지도의 실체 비교는 항상 `sR X+t`로 만든 world geometry로 수행한다.
-- **A1-U 재표현 계약:** `y_k=a_k x_k`, `Σ^y_k=a_k²Σ^x_k`, rigid placement `(R_k,t_k)` 는 원본 world map과 동일해야 한다. 그 자체를 보정 기법으로 부르지 않는다.
+- MASt3R의 raw local scale과 keyframe placement scale을 **별도 보고**하되 지도의 실체 비교는 항상 $s R X + t$로 만든 world geometry로 수행한다.
+- **A1-U 재표현 계약:** $y_k=a_k x_k$, $\Sigma^y_k=a_k^2\Sigma^x_k$, rigid placement $(R_k,t_k)$ 는 원본 world map과 동일해야 한다. 그 자체를 보정 기법으로 부르지 않는다.
 - 비중력 정렬 world z를 높이로 해석하지 않는다. *측정 높이 방향*은 검증된 gravity/reference가 있으면 그 방향, 없으면 공통 기준 평면 normal에 대한 signed coordinate로 정의한다. 서로 다른 정렬을 섞지 않는다.
 - 입력 영상의 연속성은 이미지 및 추적 기록으로 측정한다. 단순한 프레임 순서만으로 동일 픽셀의 실제 3D 대응이 보장되지 않는다.
 
@@ -152,7 +152,7 @@ Export / downstream GS (진단용 선택)
 
 **목적:** 인접 KF의 local plane이 world 배치에서 분리되는가?
 
-**방법:** 각 KF의 raw/fused map을 동일한 저장된 **pre-backend** 및 **post-backend** Sim(3)로 독립 배치해 비교한다. KF pair의 overlap ROI에서 normal 각도, plane-to-plane signed distance, symmetric point-to-plane residual 및 offset의 분포를 측정한다. 연속 KF의 `log(s_k/s_{k-1})`와 pitch/roll/t 변화, relative pose residual, loop edge 추가 전후 수치를 함께 기록한다. **Scale 값의 점프와 물리적 단차를 동치로 해석하지 않는다.** A1-U 불변 재표현과 gauge 민감도를 통과해야 한다.
+**방법:** 각 KF의 raw/fused map을 동일한 저장된 **pre-backend** 및 **post-backend** Sim(3)로 독립 배치해 비교한다. KF pair의 overlap ROI에서 normal 각도, plane-to-plane signed distance, symmetric point-to-plane residual 및 offset의 분포를 측정한다. 연속 KF의 $\log(s_k/s_{k-1})$와 pitch/roll/t 변화, relative pose residual, loop edge 추가 전후 수치를 함께 기록한다. **Scale 값의 점프와 물리적 단차를 동치로 해석하지 않는다.** A1-U 불변 재표현과 gauge 민감도를 통과해야 한다.
 
 **판정:** local/fused patch는 평탄한데 world에서만 인접 패치가 갈라지면 **H-P 지지**. Backend 업데이트 전후 단차가 출현·증폭된다면 **H-B 지지**. camera-reference calibration 불확실할 경우 이 결과는 내부 일관성 진단으로만 보고한다.
 
@@ -184,7 +184,7 @@ Export / downstream GS (진단용 선택)
 E5에서 첫 fusion 입력의 큰 이동과 tracking 거리 검사 탈락이 관찰되어 E6의 우선 후보를 T-FUS로 지정한다. 아래 항목은 **추가 평가·계측 계획**이며 아직 실행 결과가 아니다. 기존 값에 맞춰 사후 성공 임계치를 만들지 않는다.
 
 1. **좌표와 관측 방향:** canonical keyframe-local camera Z, 원점으로부터의 ray 방향 거리, world Z와 검증된 포장면 기준 평면의 법선 및 접선 방향을 구분한다. 관측 이전·이후를 같은 KF local 좌표와 고정된 픽셀 support에서 비교한다. 서로 다른 카메라의 Z 값을 직접 빼지 않고, 각 점을 명시된 Sim(3)으로 공통 좌표계에 변환한다. 원본 pair의 cross 점은 저장된 상대 Sim(3)의 역변환으로 복원할 수 있되 round-trip과 저장된 원본이 있을 때의 parity를 먼저 확인한다. Camera Z 또는 ray 방향은 측정 가능한 깊이 성분이지 기준 깊이의 정확도 자체가 아니다.
-2. **동일 support와 분해:** E2a 영상 대응 후보와 E3 전체 ROI를 별도로 보고하고, 공통 후보·export 가능한 점·변경 후 유효 점의 수와 공간 분포를 보존한다. 후보의 correctness/visibility는 독립 검증 전까지 후보로 표시한다. 후보 대응별 world 차이 벡터를 고정된 기준 법선 `n`에 대해 `d_n=nᵀΔX`, `d_t=||(I−nnᵀ)ΔX||`로 나누고 world의 `|ΔZ|`와 `||(ΔX,ΔY)||`도 같은 점에서 산출한다. 중앙값·p90 및 부호 있는 normal 차이 분포를 보고한다. 평면 법선은 동일 비교에서 고정하고 ground truth가 없으면 normal의 물리적 높이 의미는 주장하지 않는다.
+2. **동일 support와 분해:** E2a 영상 대응 후보와 E3 전체 ROI를 별도로 보고하고, 공통 후보·export 가능한 점·변경 후 유효 점의 수와 공간 분포를 보존한다. 후보의 correctness/visibility는 독립 검증 전까지 후보로 표시한다. 후보 대응별 world 차이 벡터를 고정된 기준 법선 $n$에 대해 $d_n=n^\top\Delta X$, $d_t=\lVert(I-nn^\top)\Delta X\rVert$로 나누고 world의 $|\Delta Z|$와 $\lVert(\Delta X,\Delta Y)\rVert$도 같은 점에서 산출한다. 중앙값·p90 및 부호 있는 normal 차이 분포를 보고한다. 평면 법선은 동일 비교에서 고정하고 ground truth가 없으면 normal의 물리적 높이 의미는 주장하지 않는다.
 3. **원본·fusion·배치 대조:** 동일 입력의 초기, 각 실제 fusion 전/입력/후, 마지막 fused pointmap을 KF-local camera Z 및 ray 성분으로 분석한다. 앞뒤의 적용 pose 및 confidence/매칭 유효성은 함께 기록한다. E4에서 기록된 동일 pre/post Sim(3)과 동일 pointmap으로 world normal/Z 성분 변화도 측정한다. Frozen pose와 frozen input으로 최초 fusion 입력 하나만 제외한 replay와 원본 replay를 비교하며, 원본 가중 평균식 및 E3 output parity를 먼저 검증한다. 이 변경은 나머지 입력·pose를 원래 실행에서 고정하므로 후속 tracking까지 다시 실행한 결과가 아니다.
 4. **판정과 대조:** normal/Z 차이와 접선/XY 차이가 모두 보존·변화하는 양상을 함께 제시해 특정 축만 좋아지는 대신 옆으로 흐르거나 coverage가 줄어드는 경우를 표시한다. 사용자 확인 포장면과 별도로 seam이 낮은 후보 영역의 음성 대조를 찾고 독립 correspondences·가시성을 확인한다. 유효 support가 없으면 `INSUFFICIENT_SUPPORT`로 기록하고 임의의 0으로 채우지 않는다. 고정 pose replay에서 결과가 바뀌어도 그것은 관측값이 canonical map에 미친 조건부 영향이며 실제 depth 오류 또는 개선의 증거가 아니다. 외부 깊이/표면 reference QA 및 독립 시퀀스 검증 없이는 absolute depth 정확도, metric 오차, 일반화 또는 알고리즘 개선을 주장하지 않는다.
 
@@ -202,7 +202,7 @@ E5에서 첫 fusion 입력의 큰 이동과 tracking 거리 검사 탈락이 관
 - `map seam index`: 서로 다른 source KF의 overlap에서 불연속 residual이 사전 임계치를 초과한 비율. **새로 정의한 연구용 지표**이므로 정의/단위/임계치를 사전 등록.
 - `temporal association`: seam과 KF 경계·tracking loss·scale/revision event의 시간적 인접 여부. 부정 사례도 포함.
 - `support`: 유효 대응 점 개수, 겹침 KF 쌍, 면적, 관측 angle/parallax 및 score 불능 구간 비율.
-- `axis/ray decomposition`: 동일 대응의 world `|ΔZ|`, XY 크기, 고정 기준 평면 normal 및 접선 성분의 중앙값·p90; 같은 KF-local frame에서의 camera-Z와 ray 방향 fusion 전후 변화. 축 방향과 좌표계를 명시하고 두 관측의 대응 품질 및 coverage를 병기한다. 이 수치 자체는 metric depth error가 아니다.
+- `axis/ray decomposition`: 동일 대응의 world $|\Delta Z|$, XY 크기, 고정 기준 평면 normal 및 접선 성분의 중앙값·p90; 같은 KF-local frame에서의 camera-Z와 ray 방향 fusion 전후 변화. 축 방향과 좌표계를 명시하고 두 관측의 대응 품질 및 coverage를 병기한다. 이 수치 자체는 metric depth error가 아니다.
 
 **(B) 물리적 정확도 — 신뢰할 수 있는 기준자료가 있을 때만**
 
@@ -214,23 +214,23 @@ E5에서 첫 fusion 입력의 큰 이동과 tracking 거리 검사 탈락이 관
 
 Local-to-world:
 
-\[
+$$
 \mathbf X_w=s_k\mathbf R_k\mathbf X_k+\mathbf t_k,
 \qquad \Sigma_w=s_k^2\mathbf R_k\Sigma_k\mathbf R_k^\top.
-\]
+$$
 
-동일 ROI에서 기준 plane `π_j: n_j^T x + d_j=0`, `||n_j||=1`일 때:
+동일 ROI에서 기준 plane $\pi_j: n_j^\top x + d_j=0$, $\lVert n_j\rVert=1$일 때:
 
-\[
+$$
 e_{i\to j}=\operatorname{median}_{\mathbf p\in\Omega_{ij}}
  (\mathbf n_j^\top \mathbf p+d_j),\quad
 r_{i\to j}=\operatorname{median}_{\mathbf p\in\Omega_{ij}}
  |\mathbf n_j^\top \mathbf p+d_j|.
-\]
+$$
 
-- `Ω_ij`는 geometric nearest-neighbor만이 아니라 **영상 대응·가시성으로 검증된 동일 물리 표면 영역**이다.
-- `e`는 signed step, `r`은 magnitude. 정상 경사/곡률 및 다른 물리 영역 간 높이차를 seam으로 세지 않는다.
-- 상대 KF scale `Δlog s=log(s_k/s_{k-1})` 는 로그 지표일 뿐 물리적 scale drift의 증거가 아니다. world-map preserving reparameterization에 대해 변하지 않는 geometry 지표를 주 결론에 사용.
+- $\Omega_{ij}$는 geometric nearest-neighbor만이 아니라 **영상 대응·가시성으로 검증된 동일 물리 표면 영역**이다.
+- $e$는 signed step, $r$은 magnitude. 정상 경사/곡률 및 다른 물리 영역 간 높이차를 seam으로 세지 않는다.
+- 상대 KF scale $\Delta\log s=\log(s_k/s_{k-1})$ 는 로그 지표일 뿐 물리적 scale drift의 증거가 아니다. world-map preserving reparameterization에 대해 변하지 않는 geometry 지표를 주 결론에 사용.
 
 ### 5.3. 사전 등록 품질 게이트 (초기값; 파일럿 전에 조정 가능)
 
@@ -305,9 +305,9 @@ E0의 기존 결과는 `results/E0_environment_preparation/2026-10-27/`에, 보�
 ## 8. 필수 단위 및 음성 대조 실험
 
 1. `SE(3)/Sim(3) roundtrip`: 다른 scale과 회전/이동에서 point/covariance 동일성.
-2. `Gauge invariance`: 임의 `q_k>0`로 local geometry·KF scale을 재배분해도 world geometry 및 seam 결과 같음.
+2. `Gauge invariance`: 임의 $q_k>0$로 local geometry·KF scale을 재배분해도 world geometry 및 seam 결과 같음.
 3. `Source provenance`: Pointmap 픽셀·pair·anchor→KF/fused/world/export ID 연결이 유효함.
-4. `Synthetic flat runway`: 알려진 planar points와 zero-error pose에서 seam≈0.
+4. `Synthetic flat runway`: 알려진 planar points와 zero-error pose에서 $\mathrm{seam}\approx 0$.
 5. `Synthetic local warp`: local pointmap만 휘게 하면 R1에서, world placement 단계 이전에 오류가 검출됨.
 6. `Synthetic KF pose jump`: 정상 local patch에 rotation/translation/scale 점프를 넣으면 R3에서 검출됨.
 7. `Synthetic fusion outlier`: single-frame biased pointmap으로 weighted fusion 왜곡이 R2에서 검출됨.

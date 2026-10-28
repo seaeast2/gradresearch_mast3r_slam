@@ -1,0 +1,8 @@
+{
+  "sequence": "AMtown01", "selection": "E4e pre-registered 60-120 s mapping frames, 5 Hz with every fifth held out; do not reselect by outcome",
+  "comparison": "E6-T-FUS: initial plus all actual updates versus identical frozen inputs and poses excluding the first update, separately for each eligible KF",
+  "settings": "E1/E3: image size 512, uncalibrated, 1 s forced periodic KF, buffer 64, same weights and low VRAM configuration",
+  "eligibility": "Choose static planar image ROI before examining 3D or replay outcomes; select fixed contiguous time window based on RGB visibility; record inability to verify correspondence and normal region; do not replace failures with zero.",
+  "metrics": "E3 ROI first update valid correspondence and camera Z, initial-ray, local plane normal and final replay difference, same pixel support; image candidate support and world normal/tangent if independently verified overlap and stored poses exist",
+  "decision": "Report failures and limits; no metric accuracy, global generalization, or improvement claims absent reference QA and independent physical overlap verification."
+}
